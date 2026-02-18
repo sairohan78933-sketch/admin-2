@@ -23,6 +23,11 @@
             --sidebar-gradient-top: #2F3E9E;
             --sidebar-gradient-bottom: #1E2A78;
 
+            /* Custom Scrollbar for Logs */
+            --scrollbar-bg: #F8F9FA;
+            --scrollbar-thumb: #CED4DA;
+
+
             --bg-main: #EEF1FF;
             --bg-card: #FFFFFF;
 
@@ -40,11 +45,22 @@
             --text-muted: #8B90A0;
 
             --border-light: #E9ECEF;
-            --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.03),
+                0 4px 6px -2px rgba(0, 0, 0, 0.02);
             --shadow-drawer: -10px 0 40px rgba(0, 0, 0, 0.08);
 
             --radius-md: 10px;
             --radius-sm: 6px;
+        }
+
+        .hide-values .value-col {
+            display: none;
+        }
+
+        .value-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
         }
 
         * {
@@ -621,10 +637,6 @@
                                     <option value="">All</option>
                                     <option value="Insert">Insert</option>
                                     <option value="Update">Update</option>
-                                    <option value="Login">Login</option>
-                                    <option value="Logout">Logout</option>
-                                    <option value="Approve">Approve</option>
-                                    <option value="Reject">Reject</option>
                                 </select>
                             </div>
                             <div class="form-col" style="flex: 2;">
@@ -638,7 +650,7 @@
                                 <label class="form-label">Search</label>
                                 <div style="display: flex; gap: 10px;">
                                     <input type="text" class="form-control" id="userFilter" placeholder="User...">
-                                    <input type="text" class="form-control" id="pkFilter" placeholder="ID...">
+                                    <input type="text" class="form-control" id="pkFilter" placeholder="Primary Key...">
                                 </div>
                             </div>
                             <div class="form-col"
@@ -661,9 +673,8 @@
                                     <th>Action Type</th>
                                     <th>Primary Key</th>
                                     <th>Field Name</th>
-                                    <th>Old Value</th>
-                                    <th>New Value</th>
-                                    <th>Action</th>
+                                    <th class="value-col">Old Value</th>
+                                    <th class="value-col">New Value</th>
                                 </tr>
                             </thead>
                             <tbody id="auditTableBody">
@@ -709,7 +720,7 @@
 
         // --- Mock Data Generation ---
         const TABLES = ['Users', 'Job Descriptions', 'Candidates', 'Analysis Results', 'Scoring Rules'];
-        const ACTIONS = ['Insert', 'Update', 'Delete', 'Login', 'Logout', 'Approve', 'Reject'];
+        const ACTIONS = ['Insert', 'Update'];
         const USERS = ['Admin', 'Sarah Jenkins', 'Michael Torres', 'Emily Wu', 'System'];
 
         function generateMockData() {
@@ -717,11 +728,6 @@
             for (let i = 0; i < 150; i++) {
                 const table = TABLES[Math.floor(Math.random() * TABLES.length)];
                 let action = ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
-
-                // Context-aware action filtering
-                if (table === 'Users' && (action === 'Approve' || action === 'Reject')) action = 'Update';
-                if (table === 'Analysis Results' && (action === 'Login' || action === 'Logout')) action = 'Update';
-                if (table === 'Scoring Rules' && (action === 'Login' || action === 'Logout')) action = 'Update';
 
                 let user = USERS[Math.floor(Math.random() * USERS.length)];
                 // System actions for automated tasks
@@ -740,7 +746,6 @@
                         field = Math.random() > 0.5 ? 'Role' : 'Status';
                         oldValue = field === 'Role' ? 'Recruiter' : 'Active';
                         newValue = field === 'Role' ? 'HR Manager' : 'Inactive';
-                        if (action === 'Login' || action === 'Logout') { field = 'Session'; oldValue = '-'; newValue = 'Success'; }
                         break;
                     case 'Job Descriptions':
                         pkPrefix = 'JD';
@@ -819,6 +824,14 @@
                 return matchesTable && matchesAction && matchesUser && matchesPk && matchesDate;
             });
 
+            // Toggle Value Columns Visibility - REMOVED (Review Refinement)
+            // const dataTable = document.querySelector('.data-table');
+            // if (action === 'Insert' || action === 'Update') {
+            //     dataTable.classList.add('hide-values');
+            // } else {
+            //     dataTable.classList.remove('hide-values');
+            // }
+
             currentPage = 1;
             renderTable();
             renderPagination();
@@ -837,6 +850,7 @@
         // --- Rendering ---
         function renderTable() {
             const tbody = document.getElementById('auditTableBody');
+            const actionFilter = document.getElementById('actionFilter').value;
             tbody.innerHTML = '';
 
             const start = (currentPage - 1) * itemsPerPage;
@@ -844,19 +858,21 @@
             const pageItems = filteredData.slice(start, end);
 
             if (pageItems.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 20px; color: var(--text-secondary);">No logs found matching criteria.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--text-secondary);">No logs found matching criteria.</td></tr>';
                 return;
             }
 
             pageItems.forEach((item, i) => {
                 const sNo = start + i + 1;
                 let badgeClass = 'badge-info';
-                if (item.action === 'Insert' || item.action === 'Login' || item.action === 'Approve') badgeClass = 'badge-success';
-                if (item.action === 'Delete' || item.action === 'Reject' || item.action === 'Logout') badgeClass = 'badge-danger';
+                if (item.action === 'Insert') badgeClass = 'badge-success';
                 if (item.action === 'Update') badgeClass = 'badge-warning';
 
-                // Truncate new value if too long
-                const displayNewValue = item.newValue.length > 30 ? item.newValue.substring(0, 30) + '...' : item.newValue;
+                // Logic: If filter is 'Insert', show blank values. 
+                // Otherwise (All or Update), show actual values.
+                const showValues = actionFilter !== 'Insert';
+                const displayOld = showValues ? item.oldValue : '';
+                const displayNew = showValues ? item.newValue : '';
 
                 const tr = document.createElement('tr');
                 tr.className = 'audit-row';
@@ -868,9 +884,8 @@
                     <td><span class="badge ${badgeClass}">${item.action.toUpperCase()}</span></td>
                     <td class="mono-text">${item.pk}</td>
                     <td>${item.field}</td>
-                    <td class="mono-text">${item.oldValue}</td>
-                    <td class="mono-text" title="${item.newValue.replace(/"/g, '&quot;')}">${displayNewValue}</td>
-                    <td><button class="btn btn-sm btn-secondary" onclick="viewDetails('${item.id}')">View Details</button></td>
+                    <td class="value-col">${displayOld}</td>
+                    <td class="value-col">${displayNew}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -938,7 +953,7 @@
                     </div>
                     <div>
                          <label class="form-label" style="color: var(--text-secondary); font-size: 12px;">Action</label>
-                         <span class="badge ${item.action === 'insert' ? 'badge-success' : 'badge-info'}">${item.action.toUpperCase()}</span>
+                         <span class="badge ${item.action === 'Insert' ? 'badge-success' : 'badge-info'}">${item.action.toUpperCase()}</span>
                     </div>
                 </div>
 
@@ -952,7 +967,7 @@
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                             <div>
-                                <span style="font-size: 11px; color: var(--text-secondary);">Old Value</span>
+                                <span style="font-size: 11px; color: var(--text-secondary);">Old Value;</span>
                                 <div style="font-family: monospace; background: #FFF5F5; color: #C92A2A; padding: 4px 8px; border-radius: 4px;">${item.oldValue}</div>
                             </div>
                             <div>
