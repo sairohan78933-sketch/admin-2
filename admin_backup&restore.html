@@ -580,7 +580,6 @@
             <div class="tabs">
                 <div class="tab active" onclick="switchTab('scheduled', this)">Scheduled Backup</div>
                 <div class="tab" onclick="switchTab('manual', this)">Manual Backup</div>
-                <div class="tab" onclick="switchTab('history', this)">Backup History</div>
             </div>
         </div>
 
@@ -592,43 +591,107 @@
                 <div class="card">
                     <div class="card-header">
                         <span>Scheduled Backup Configuration</span>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
+
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Backup Frequency</label>
                         <div class="radio-group">
-                            <label class="radio-item" style="opacity: 0.7; cursor: not-allowed;">
-                                <input type="radio" checked disabled> Weekly (Sunday)
+                            <label class="radio-item">
+                                <input type="radio" name="backupFrequency" value="daily" checked
+                                    onclick="toggleTimeSelector(true)"> Once a day
                             </label>
+                            <div id="timeSelectorContainer"
+                                style="margin-left: 28px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 13px; color: var(--text-primary);">Select time of day:</span>
+                                <select class="form-control"
+                                    style="width: auto; padding: 6px 12px; border-radius: 4px; border: 1px solid var(--border-light); font-size: 13px; color: var(--text-primary); outline: none;">
+                                    <option>12:00 AM</option>
+                                    <option>1:00 AM</option>
+                                    <option>2:00 AM</option>
+                                    <option selected>3:00 AM</option>
+                                    <option>4:00 AM</option>
+                                    <option>5:00 AM</option>
+                                    <option>6:00 AM</option>
+                                    <option>7:00 AM</option>
+                                    <option>8:00 AM</option>
+                                    <option>9:00 AM</option>
+                                    <option>10:00 AM</option>
+                                    <option>11:00 AM</option>
+                                    <option>12:00 PM</option>
+                                    <option>1:00 PM</option>
+                                    <option>2:00 PM</option>
+                                    <option>3:00 PM</option>
+                                    <option>4:00 PM</option>
+                                    <option>5:00 PM</option>
+                                    <option>6:00 PM</option>
+                                    <option>7:00 PM</option>
+                                    <option>8:00 PM</option>
+                                    <option>9:00 PM</option>
+                                    <option>10:00 PM</option>
+                                    <option>11:00 PM</option>
+                                </select>
+
+                            </div>
+
+
                         </div>
-                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 8px;">
-                            <i class="fa-solid fa-circle-info"></i> System maintenance window is fixed to Sundays.
-                        </p>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Backup Scope</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" checked> Database (User Data, Configurations)
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" checked> Documents (JDs, Resumes)
-                            </label>
+
+
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label class="form-label">Backup History</label>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>File name</th>
+                                        <th>Type</th>
+                                        <th>Created by</th>
+                                        <th>Size</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>backup_20231022.zip</td>
+                                        <td>Database</td>
+                                        <td>System</td>
+                                        <td>45 MB</td>
+                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-action" title="Download">
+                                                <i class="fa-solid fa-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>backup_20231021.zip</td>
+                                        <td>Database</td>
+                                        <td>System</td>
+                                        <td>44 MB</td>
+                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-action" title="Download">
+                                                <i class="fa-solid fa-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 0;">
                         <label class="form-label">Retention Policy</label>
                         <div style="background: var(--bg-main); padding: 12px; border-radius: 6px;">
-                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Keep last 7 successful
-                                backups</div>
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Keep last 7
+                                successful backups</div>
                             <div style="font-size: 13px; color: var(--text-secondary);">
-                                Oldest backup is automatically deleted when a new successful backup exceeds this limit.
+                                Oldest backup is automatically deleted when a new successful backup exceeds this
+                                limit.
                             </div>
                         </div>
 
@@ -637,110 +700,33 @@
                             style="margin-top: 16px; padding: 12px; border: 1px solid var(--status-info); background: var(--status-bg-info); border-radius: 6px; display: flex; gap: 10px;">
                             <i class="fa-solid fa-circle-info" style="color: var(--status-info); margin-top: 2px;"></i>
                             <div style="font-size: 13px; color: var(--text-primary);">
-                                <strong>Note:</strong> Document backups are incremental. Unnecessary files may be
-                                truncated during cleanup processes.
+                                <strong>Note:</strong> Document backups are incremental.
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 2: Manual Backup -->
-            <div id="tab-manual" class="tab-content">
-                <div class="card">
-                    <div class="card-header">Run Manual Backup</div>
-
-                    <div class="form-group">
-                        <label class="form-label">Select Data to Backup</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" checked id="manual-db"> Database
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" checked id="manual-docs"> Documents (JDs, Resumes)
-                            </label>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 24px;">
-                        <button class="btn btn-primary" onclick="runManualBackup()">
-                            <i class="fa-solid fa-play"></i> Run Manual Backup
-                        </button>
-                    </div>
-
-                    <!-- Progress Area (Hidden by default) -->
-                    <div id="backup-progress"
-                        style="display: none; margin-top: 24px; border-top: 1px solid var(--border-light); padding-top: 20px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="font-size: 14px; font-weight: 500;">Backing up...</span>
-                            <span style="font-size: 14px; font-weight: 600;" id="progress-percent">0%</span>
-                        </div>
-                        <div style="height: 8px; background: var(--bg-main); border-radius: 4px; overflow: hidden;">
-                            <div id="progress-bar"
-                                style="height: 100%; width: 0%; background: var(--primary-blue); transition: width 0.3s;">
-                            </div>
-                        </div>
+            <!-- Progress Area (Hidden by default) -->
+            <div id="backup-progress"
+                style="display: none; margin-top: 24px; border-top: 1px solid var(--border-light); padding-top: 20px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 14px; font-weight: 500;">Backing up...</span>
+                    <span style="font-size: 14px; font-weight: 600;" id="progress-percent">0%</span>
+                </div>
+                <div style="height: 8px; background: var(--bg-main); border-radius: 4px; overflow: hidden;">
+                    <div id="progress-bar"
+                        style="height: 100%; width: 0%; background: var(--primary-blue); transition: width 0.3s;">
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 3: Backup History -->
-            <div id="tab-history" class="tab-content">
-                <div class="card">
-                    <div class="card-header"
-                        style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>Backup History</span>
-                        <span style="font-size: 12px; font-weight: normal; color: var(--text-secondary);">Only
-                            successful backups are displayed.</span>
-                    </div>
 
-                    <div class="table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Backup Type</th>
-                                    <th>Scope</th>
-                                    <th>Backup Date</th>
-                                    <th>Status</th>
-                                    <th style="text-align: right;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><span style="font-weight: 500;">Scheduled</span></td>
-                                    <td>Database, Documents</td>
-                                    <td style="color: var(--text-secondary);">Oct 22, 2023, 02:00 AM</td>
-                                    <td><span class="badge badge-active">Successful</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="btn-action"
-                                            onclick="alert('Restore functionality would go here.')">Restore</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span style="font-weight: 500;">Manual</span></td>
-                                    <td>Database</td>
-                                    <td style="color: var(--text-secondary);">Oct 18, 2023, 14:30 PM</td>
-                                    <td><span class="badge badge-active">Successful</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="btn-action"
-                                            onclick="alert('Restore functionality would go here.')">Restore</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span style="font-weight: 500;">Scheduled</span></td>
-                                    <td>Database, Documents</td>
-                                    <td style="color: var(--text-secondary);">Oct 15, 2023, 02:00 AM</td>
-                                    <td><span class="badge badge-active">Successful</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="btn-action"
-                                            onclick="alert('Restore functionality would go here.')">Restore</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+
+        </div>
+        </div>
+
+
 
         </div>
     </main>
@@ -801,47 +787,59 @@
                     setTimeout(() => {
                         // Reset UI
                         progressArea.style.display = 'none';
-                        progressBar.style.width = '0%';
-                        progressBar.style.backgroundColor = 'var(--primary-blue)';
-                        btn.innerHTML = originalText;
                         btn.disabled = false;
+                        btn.innerHTML = originalText;
+                        progressBar.style.width = '0%';
+                        progressPercent.textContent = '0%';
+                        progressBar.style.backgroundColor = 'var(--primary-blue)'; // Reset color
+                        document.getElementById('manual-db').checked = true;
+                        document.getElementById('manual-docs').checked = true;
 
-                        // Add to History Table
-                        const historyTableBody = document.querySelector('#tab-history .data-table tbody');
+                        // Add to History Table (Manual Tab)
+                        const historyTableBody = document.querySelector('#manual-history-table tbody');
                         const now = new Date();
-                        const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ", " + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                        const dateStr = now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
+                        const fileName = `manual_${dateStr}.zip`;
 
-                        let scopeText = [];
-                        if (dbChecked) scopeText.push("Database");
-                        if (docsChecked) scopeText.push("Documents");
+                        let typeStr = "Database";
+                        if (dbChecked && docsChecked) typeStr = "Database + Docs";
+                        else if (docsChecked) typeStr = "Documents";
 
                         const newRow = document.createElement('tr');
                         newRow.innerHTML = `
-                            <td><span style="font-weight: 500;">Manual</span></td>
-                            <td>${scopeText.join(', ')}</td>
-                            <td style="color: var(--text-secondary);">${dateStr}</td>
-                            <td><span class="badge badge-active">Successful</span></td>
+                            <td>${fileName}</td>
+                            <td>${typeStr}</td>
+                            <td>Admin</td>
+                            <td>48 MB</td>
+                            <td><span class="badge badge-active">Active</span></td>
                             <td style="text-align: right;">
-                                <button class="btn-action" onclick="alert('Restore functionality would go here.')">Restore</button>
+                                <button class="btn-action" title="Download">
+                                    <i class="fa-solid fa-download"></i>
+                                </button>
                             </td>
                         `;
 
                         // Insert at the top
                         historyTableBody.insertBefore(newRow, historyTableBody.firstChild);
 
-                        // Notify user and switch tab
-                        if (confirm('Backup completed successfully! View in history?')) {
-                            switchTab('history', document.querySelectorAll('.tab')[2]);
-                        }
+                        alert('Manual backup completed successfully!');
 
-                    }, 2000);
+                    }, 500);
                 } else {
-                    width += Math.random() * 10;
-                    if (width > 100) width = 100;
+                    width++;
                     progressBar.style.width = width + '%';
-                    progressPercent.textContent = Math.round(width) + '%';
+                    progressPercent.textContent = width + '%';
                 }
-            }, 300);
+            }, 30);
+        }
+
+        function toggleTimeSelector(show) {
+            const container = document.getElementById('timeSelectorContainer');
+            if (show) {
+                container.style.display = 'flex';
+            } else {
+                container.style.display = 'none';
+            }
         }
     </script>
 </body>
