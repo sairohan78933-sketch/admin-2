@@ -707,16 +707,108 @@
                 </div>
             </div>
 
-            <!-- Progress Area (Hidden by default) -->
-            <div id="backup-progress"
-                style="display: none; margin-top: 24px; border-top: 1px solid var(--border-light); padding-top: 20px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="font-size: 14px; font-weight: 500;">Backing up...</span>
-                    <span style="font-size: 14px; font-weight: 600;" id="progress-percent">0%</span>
-                </div>
-                <div style="height: 8px; background: var(--bg-main); border-radius: 4px; overflow: hidden;">
-                    <div id="progress-bar"
-                        style="height: 100%; width: 0%; background: var(--primary-blue); transition: width 0.3s;">
+            <!-- TAB 2: Manual Backup -->
+            <div id="tab-manual" class="tab-content">
+                <div class="card">
+                    <div class="card-header">Run Manual Backup</div>
+                    <div class="form-group">
+                        <label class="form-label">Select Data to Backup</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" checked id="manual-db"> Database
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" checked id="manual-docs"> Documents (JDs, Resumes)
+                            </label>
+                        </div>
+                    </div>
+                    <div style="margin-top: 24px;">
+                        <button class="btn btn-primary" onclick="runManualBackup()">
+                            <i class="fa-solid fa-play"></i> Run Manual Backup
+                        </button>
+                    </div>
+
+                    <!-- Progress Area (Hidden by default) -->
+                    <div id="backup-progress"
+                        style="display: none; margin-top: 24px; border-top: 1px solid var(--border-light); padding-top: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-size: 14px; font-weight: 500;">Backing up...</span>
+                            <span style="font-size: 14px; font-weight: 600;" id="progress-percent">0%</span>
+                        </div>
+                        <div style="height: 8px; background: var(--bg-main); border-radius: 4px; overflow: hidden;">
+                            <div id="progress-bar"
+                                style="height: 100%; width: 0%; background: var(--primary-blue); transition: width 0.3s;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group"
+                        style="margin-top: 24px; border-top: 1px solid var(--border-light); padding-top: 24px;">
+                        <label class="form-label">Backup History</label>
+                        <div class="table-container">
+                            <table class="data-table" id="manual-history-table">
+                                <thead>
+                                    <tr>
+                                        <th>File name</th>
+                                        <th>Type</th>
+                                        <th>Created by</th>
+                                        <th>Size</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>manual_20231023.zip</td>
+                                        <td>Database</td>
+                                        <td>Admin</td>
+                                        <td>45 MB</td>
+                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-action" title="Download">
+                                                <i class="fa-solid fa-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>manual_20231020.zip</td>
+                                        <td>Documents</td>
+                                        <td>Admin</td>
+                                        <td>120 MB</td>
+                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-action" title="Download">
+                                                <i class="fa-solid fa-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>manual_20231015.zip</td>
+                                        <td>Database + Docs</td>
+                                        <td>Admin</td>
+                                        <td>165 MB</td>
+                                        <td><span class="badge badge-warning">Archived</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-action" title="Download" disabled>
+                                                <i class="fa-solid fa-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>manual_20231010.zip</td>
+                                        <td>Database</td>
+                                        <td>John Doe</td>
+                                        <td>42 MB</td>
+                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-action" title="Download">
+                                                <i class="fa-solid fa-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -724,11 +816,7 @@
 
 
         </div>
-        </div>
 
-
-
-        </div>
     </main>
 
     <script>
