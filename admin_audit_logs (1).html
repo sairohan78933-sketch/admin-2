@@ -727,7 +727,9 @@
             const data = [];
             for (let i = 0; i < 150; i++) {
                 const table = TABLES[Math.floor(Math.random() * TABLES.length)];
-                let action = ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
+
+                // Weighted Action: 80% Update, 20% Insert (~2 inserts per page of 10)
+                let action = Math.random() < 0.8 ? 'Update' : 'Insert';
 
                 let user = USERS[Math.floor(Math.random() * USERS.length)];
                 // System actions for automated tasks
@@ -868,9 +870,10 @@
                 if (item.action === 'Insert') badgeClass = 'badge-success';
                 if (item.action === 'Update') badgeClass = 'badge-warning';
 
-                // Logic: If filter is 'Insert', show blank values. 
-                // Otherwise (All or Update), show actual values.
-                const showValues = actionFilter !== 'Insert';
+                // Logic: If action is 'Insert', show blank values. 
+                // Otherwise (Update), show actual values.
+                // This applies regardless of the filter selected.
+                const showValues = item.action !== 'Insert';
                 const displayOld = showValues ? item.oldValue : '';
                 const displayNew = showValues ? item.newValue : '';
 
