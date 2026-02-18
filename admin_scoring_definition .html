@@ -827,9 +827,18 @@
                 return;
             }
 
-            // Generate new ID (simple logic: max ID + 1)
             const table = document.getElementById('dimensions-table').getElementsByTagName('tbody')[0];
             const rows = table.getElementsByTagName('tr');
+
+            // Duplicate Check
+            for (let i = 0; i < rows.length; i++) {
+                const existingName = rows[i].cells[1].textContent.trim();
+                if (existingName.toLowerCase() === name.toLowerCase()) {
+                    alert('A dimension with this name already exists. Please choose a unique name.');
+                    return;
+                }
+            }
+
             let maxId = 0;
             for (let i = 0; i < rows.length; i++) {
                 const idCell = rows[i].cells[0];
@@ -886,6 +895,18 @@
             if (!newName) {
                 alert('Please enter a dimension name.');
                 return;
+            }
+
+            // Duplicate Check (exclude current row)
+            const table = document.getElementById('dimensions-table').getElementsByTagName('tbody')[0];
+            const rows = table.getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].id === editingRowId) continue; // Skip self
+                const existingName = rows[i].cells[1].textContent.trim();
+                if (existingName.toLowerCase() === newName.toLowerCase()) {
+                    alert('A dimension with this name already exists. Please choose a unique name.');
+                    return;
+                }
             }
 
             const row = document.getElementById(editingRowId);
