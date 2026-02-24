@@ -524,19 +524,89 @@
         }
 
         .modal-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border-light);
+            background-color: var(--primary-blue);
+            padding: 10px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: white;
         }
 
         .modal-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 10px;
+            color: white !important;
+        }
+
+        .modal-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .modal-control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .modal-control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-control-btn.close-btn:hover {
+            background: #e81123;
+        }
+
+        /* Minimized State */
+        .modal-overlay.minimized {
+            background: transparent;
+            backdrop-filter: none;
+            pointer-events: none;
+        }
+
+        .modal-content.minimized {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-width: 300px;
+            transform: none !important;
+            animation: slideToCorner 0.3s ease-out;
+            pointer-events: auto;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--primary-blue);
+        }
+
+        @keyframes slideToCorner {
+            from {
+                transform: scale(0.9) translate(-50%, -50%);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translate(0, 0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content.minimized .modal-body,
+        .modal-content.minimized .modal-footer {
+            display: none;
+        }
+
+        .modal-content.minimized .modal-header {
+            border-radius: 8px;
         }
 
         .modal-body {
@@ -605,7 +675,7 @@
             <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i>
                 User Management</a>
             <a href="#" class="nav-item active"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Backup & Restore</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Backup Configuration</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
         </nav>
     </aside>
@@ -761,9 +831,12 @@
                 <div class="modal-title">
                     <i class="fa-solid fa-plus-circle"></i> Create New Dimension
                 </div>
-                <button onclick="closeCreateModal()"
-                    style="background:none; border:none; cursor:pointer; font-size: 18px; color: var(--text-secondary);"><i
-                        class="fa-solid fa-xmark"></i></button>
+                <div class="modal-controls">
+                    <button class="modal-control-btn" onclick="toggleMinimize(this)" title="Minimize/Restore"><i
+                            class="fa-solid fa-minus"></i></button>
+                    <button class="modal-control-btn close-btn" onclick="closeCreateModal()" title="Close"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -788,9 +861,12 @@
                 <div class="modal-title">
                     <i class="fa-solid fa-pen-to-square"></i> Edit Dimension
                 </div>
-                <button onclick="closeEditModal()"
-                    style="background:none; border:none; cursor:pointer; font-size: 18px; color: var(--text-secondary);"><i
-                        class="fa-solid fa-xmark"></i></button>
+                <div class="modal-controls">
+                    <button class="modal-control-btn" onclick="toggleMinimize(this)" title="Minimize/Restore"><i
+                            class="fa-solid fa-minus"></i></button>
+                    <button class="modal-control-btn close-btn" onclick="closeEditModal()" title="Close"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -817,7 +893,10 @@
         }
 
         function closeCreateModal() {
-            document.getElementById('modal-create').classList.remove('show');
+            const modal = document.getElementById('modal-create');
+            modal.classList.remove('show');
+            modal.classList.remove('minimized');
+            modal.querySelector('.modal-content').classList.remove('minimized');
         }
 
         function saveNewDimension() {
@@ -884,8 +963,26 @@
         }
 
         function closeEditModal() {
-            document.getElementById('modal-edit').classList.remove('show');
+            const modal = document.getElementById('modal-edit');
+            modal.classList.remove('show');
+            modal.classList.remove('minimized');
+            modal.querySelector('.modal-content').classList.remove('minimized');
             editingRowId = null;
+        }
+
+        function toggleMinimize(btn) {
+            const modal = btn.closest('.modal-overlay');
+            const content = modal.querySelector('.modal-content');
+            const isMinimized = content.classList.toggle('minimized');
+            modal.classList.toggle('minimized', isMinimized);
+
+            // Update icon
+            const icon = btn.querySelector('i');
+            if (isMinimized) {
+                icon.classList.replace('fa-minus', 'fa-up-right-from-square');
+            } else {
+                icon.classList.replace('fa-up-right-from-square', 'fa-minus');
+            }
         }
 
         function saveEditDimension() {
