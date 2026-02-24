@@ -105,7 +105,7 @@
         .nav-item.active {
             background: rgba(255, 255, 255, 0.15);
             color: white;
-            border-left: 4px solid white;
+            border-left: 4px solid var(--status-info);
         }
 
         .nav-item i {
@@ -355,50 +355,55 @@
         }
 
         /* Column Widths */
+        /* S.No */
         .data-table th:nth-child(1),
         .data-table td:nth-child(1) {
-            width: 15%;
-            white-space: nowrap;
-            font-weight: 500;
+            width: 60px;
+            text-align: center;
         }
 
-        /* Ref ID */
+        /* File Name */
         .data-table th:nth-child(2),
         .data-table td:nth-child(2) {
-            width: 18%;
+            width: 15%;
             white-space: nowrap;
         }
 
-        /* Date */
+        /* Timestamp */
         .data-table th:nth-child(3),
         .data-table td:nth-child(3) {
-            width: 12%;
+            width: 15%;
+            white-space: nowrap;
         }
 
-        /* Category */
+        /* Type */
         .data-table th:nth-child(4),
         .data-table td:nth-child(4) {
-            width: 30%;
+            width: 15%;
         }
 
-        /* Included Data */
+        /* Created by */
         .data-table th:nth-child(5),
         .data-table td:nth-child(5) {
-            width: 8%;
-            white-space: nowrap;
+            width: 15%;
         }
 
         /* Size */
         .data-table th:nth-child(6),
         .data-table td:nth-child(6) {
-            width: 12%;
-            white-space: nowrap;
+            width: 10%;
         }
 
         /* Status */
         .data-table th:nth-child(7),
         .data-table td:nth-child(7) {
-            width: 5%;
+            width: 10%;
+        }
+
+        /* Action */
+        .data-table th:nth-child(8),
+        .data-table td:nth-child(8) {
+            width: 15%;
             text-align: right;
         }
 
@@ -425,7 +430,7 @@
             white-space: nowrap;
         }
 
-        .badge-active {
+        .badge-success {
             background: var(--status-bg-success);
             color: var(--status-success);
         }
@@ -582,30 +587,95 @@
         }
 
         .modal-header {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--status-error);
+            background-color: var(--primary-blue);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .modal-title {
+            font-size: 14px;
+            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 10px;
+            color: white !important;
         }
 
-        .modal-body {
-            font-size: 14px;
-            color: var(--text-primary);
-            line-height: 1.5;
-            margin-bottom: 24px;
-        }
-
-        .modal-footer {
+        .modal-controls {
             display: flex;
-            justify-content: flex-end;
-            gap: 12px;
+            gap: 4px;
         }
 
-        /* Badge Error */
-        .badge-error {
+        .modal-control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .modal-control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-control-btn.close-btn:hover {
+            background: #e81123;
+        }
+
+        /* Minimized State */
+        .modal-overlay.minimized {
+            background: transparent;
+            backdrop-filter: none;
+            pointer-events: none;
+        }
+
+        .modal-content.minimized {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-width: 300px;
+            transform: none !important;
+            animation: slideToCorner 0.3s ease-out;
+            pointer-events: auto;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--primary-blue);
+        }
+
+        @keyframes slideToCorner {
+            from {
+                transform: scale(0.9) translate(0, 20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translate(0, 0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content.minimized .modal-body,
+        .modal-content.minimized .modal-footer {
+            display: none;
+        }
+
+        .modal-content.minimized .modal-header {
+            border-radius: 8px;
+        }
+
+        /* Badge Failure */
+        .badge-failure {
             background: var(--status-bg-error);
             color: var(--status-error);
         }
@@ -624,7 +694,7 @@
             <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i>
                 User Management</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
-            <a href="#" class="nav-item active"><i class="fa-solid fa-database"></i> Backup & Restore</a>
+            <a href="#" class="nav-item active"><i class="fa-solid fa-database"></i> Backup Configuration</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
         </nav>
     </aside>
@@ -668,7 +738,8 @@
                             </label>
                             <div id="timeSelectorContainer"
                                 style="margin-left: 28px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
-                                <span style="font-size: 13px; color: var(--text-primary);">Select time of day:</span>
+                                <span style="font-size: 13px; color: var(--text-primary);">Select time of
+                                    day:</span>
                                 <select class="form-control"
                                     style="width: auto; padding: 6px 12px; border-radius: 4px; border: 1px solid var(--border-light); font-size: 13px; color: var(--text-primary); outline: none;">
                                     <option>12:00 AM</option>
@@ -703,6 +774,13 @@
                         </div>
                     </div>
 
+                    <div
+                        style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border-light);">
+                        <button class="btn btn-primary" onclick="saveScheduledSettings()">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Backup
+                        </button>
+                    </div>
+
 
 
                     <div class="form-group" style="margin-bottom: 24px;">
@@ -711,7 +789,9 @@
                             <table class="data-table">
                                 <thead>
                                     <tr>
+                                        <th style="text-align: center;">S.No</th>
                                         <th>File name</th>
+                                        <th>Timestamp</th>
                                         <th>Type</th>
                                         <th>Created by</th>
                                         <th>Size</th>
@@ -721,11 +801,15 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td style="text-align: center;">1</td>
                                         <td>backup_20231022.zip</td>
-                                        <td>Database</td>
+                                        <td style="color: var(--text-muted); font-size: 13px;">Oct 22, 2023,
+                                            03:00 AM
+                                        </td>
+                                        <td>Database + Docs</td>
                                         <td>System</td>
-                                        <td>45 MB</td>
-                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td>450 MB</td>
+                                        <td><span class="badge badge-success">Success</span></td>
                                         <td style="text-align: right;">
                                             <button class="btn-action" title="Download">
                                                 <i class="fa-solid fa-download"></i>
@@ -733,11 +817,31 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td style="text-align: center;">2</td>
                                         <td>backup_20231021.zip</td>
+                                        <td style="color: var(--text-muted); font-size: 13px;">Oct 21, 2023,
+                                            03:00 AM
+                                        </td>
                                         <td>Database</td>
                                         <td>System</td>
-                                        <td>44 MB</td>
-                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td>45 MB</td>
+                                        <td><span class="badge badge-success">Success</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-action" title="Download">
+                                                <i class="fa-solid fa-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center;">3</td>
+                                        <td>backup_20231020.zip</td>
+                                        <td style="color: var(--text-muted); font-size: 13px;">Oct 20, 2023,
+                                            03:00 AM
+                                        </td>
+                                        <td>Documents</td>
+                                        <td>System</td>
+                                        <td>120 MB</td>
+                                        <td><span class="badge badge-success">Success</span></td>
                                         <td style="text-align: right;">
                                             <button class="btn-action" title="Download">
                                                 <i class="fa-solid fa-download"></i>
@@ -752,7 +856,7 @@
                     <div class="form-group" style="margin-bottom: 0;">
                         <label class="form-label">Retention Policy</label>
                         <div style="background: var(--bg-main); padding: 12px; border-radius: 6px;">
-                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Keep last 7
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Keeps last 7
                                 successful backups</div>
                             <div style="font-size: 13px; color: var(--text-secondary);">
                                 Oldest backup is automatically deleted when a new successful backup exceeds this
@@ -814,7 +918,9 @@
                             <table class="data-table" id="manual-history-table">
                                 <thead>
                                     <tr>
+                                        <th style="text-align: center;">S.No</th>
                                         <th>File name</th>
+                                        <th>Timestamp</th>
                                         <th>Type</th>
                                         <th>Created by</th>
                                         <th>Size</th>
@@ -824,11 +930,15 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td style="text-align: center;">1</td>
                                         <td>manual_20231023.zip</td>
+                                        <td style="color: var(--text-muted); font-size: 13px;">Oct 23, 2023,
+                                            11:20 AM
+                                        </td>
                                         <td>Database</td>
                                         <td>Admin</td>
                                         <td>45 MB</td>
-                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td><span class="badge badge-success">Success</span></td>
                                         <td style="text-align: right;">
                                             <button class="btn-action" title="Download">
                                                 <i class="fa-solid fa-download"></i>
@@ -836,11 +946,15 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td style="text-align: center;">2</td>
                                         <td>manual_20231020.zip</td>
+                                        <td style="color: var(--text-muted); font-size: 13px;">Oct 20, 2023,
+                                            04:15 PM
+                                        </td>
                                         <td>Documents</td>
                                         <td>Admin</td>
                                         <td>120 MB</td>
-                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td><span class="badge badge-success">Success</span></td>
                                         <td style="text-align: right;">
                                             <button class="btn-action" title="Download">
                                                 <i class="fa-solid fa-download"></i>
@@ -848,7 +962,11 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td style="text-align: center;">3</td>
                                         <td>manual_20231015.zip</td>
+                                        <td style="color: var(--text-muted); font-size: 13px;">Oct 15, 2023,
+                                            09:30 AM
+                                        </td>
                                         <td>Database + Docs</td>
                                         <td>Admin</td>
                                         <td>165 MB</td>
@@ -860,11 +978,15 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td style="text-align: center;">4</td>
                                         <td>manual_20231010.zip</td>
+                                        <td style="color: var(--text-muted); font-size: 13px;">Oct 10, 2023,
+                                            02:45 PM
+                                        </td>
                                         <td>Database</td>
-                                        <td>John Doe</td>
+                                        <td>Amit Singh</td>
                                         <td>42 MB</td>
-                                        <td><span class="badge badge-active">Active</span></td>
+                                        <td><span class="badge badge-success">Success</span></td>
                                         <td style="text-align: right;">
                                             <button class="btn-action" title="Download">
                                                 <i class="fa-solid fa-download"></i>
@@ -878,26 +1000,65 @@
                 </div>
             </div>
 
+        </div>
+
 
 
         </div>
 
     </main>
 
-    <!-- Error Modal -->
+    <!-- Error Modal (Immediate Failure Popup) -->
     <div id="error-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                Backup Failed
+                <div class="modal-title" style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Backup Failed
+                </div>
+                <div class="modal-controls">
+                    <button class="modal-control-btn" onclick="toggleMinimize(this)" title="Minimize/Restore"><i
+                            class="fa-solid fa-minus"></i></button>
+                    <button class="modal-control-btn close-btn" onclick="cancelBackup()" title="Close"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
-            <div class="modal-body">
-                An unexpected error occurred while communicating with the storage server. Please check your internet
-                connection and try again.
+            <div class="modal-body" id="error-message-text">
+                Backup failed due to a server connection error. Please try again.
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="cancelBackup()">Cancel</button>
-                <button class="btn btn-primary" onclick="resumeBackup()">Resume</button>
+                <button class="btn btn-secondary" onclick="cancelBackup()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure Log Details Modal (History View) -->
+    <div id="failure-details-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Backup Log Details
+                </div>
+                <div class="modal-controls">
+                    <button class="modal-control-btn" onclick="toggleMinimize(this)" title="Minimize/Restore"><i
+                            class="fa-solid fa-minus"></i></button>
+                    <button class="modal-control-btn close-btn" onclick="closeLogModal()" title="Close"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div
+                    style="background: var(--bg-main); padding: 16px; border-radius: 6px; border: 1px solid var(--border-light);">
+                    <p style="font-weight: 600; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
+                        Technical Error Log:</p>
+                    <p id="failure-log-content"
+                        style="font-family: 'Consolas', monospace; font-size: 13px; color: var(--status-error); white-space: pre-wrap; margin: 0;">
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeLogModal()">Close</button>
             </div>
         </div>
     </div>
@@ -928,8 +1089,7 @@
             width: 0,
             dbChecked: false,
             docsChecked: false,
-            interval: null,
-            isResumed: false
+            interval: null
         };
 
         function runManualBackup(resume = false) {
@@ -949,36 +1109,41 @@
                 return;
             }
 
-            // Initialization (only if not resuming)
-            if (!resume) {
-                currentBackupState.width = 0;
-                currentBackupState.dbChecked = dbChecked;
-                currentBackupState.docsChecked = docsChecked;
-                currentBackupState.isResumed = false;
-
-                // Show progress
-                progressArea.style.display = 'block';
-                progressBar.className = '';
-                progressBar.style.backgroundColor = 'var(--primary-blue)';
-            }
-
             // Disable button
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + (resume ? 'Resuming...' : 'Initiating...');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Initiating...';
 
-            // Random failure chance (20%) - ONLY if not already resumed to prevent loops
-            const willFail = !resume && Math.random() < 0.2;
+            // Error scenarios
+            const errorMessages = [
+                "Database connection timeout during compression.",
+                "Storage quota exceeded on backup destination.",
+                "Permission denied while accessing critical file system.",
+                "Checksum mismatch detected during verification.",
+                "Concurrent backup process already in progress."
+            ];
+
+            // Random failure chance (20%)
+            const willFail = Math.random() < 0.2;
             const failurePoint = 60 + Math.floor(Math.random() * 20); // Fail between 60-80%
+            const selectedError = errorMessages[Math.floor(Math.random() * errorMessages.length)];
 
             currentBackupState.interval = setInterval(() => {
-                // FAILURE SCENARIO
+                currentBackupState.width += 1;
+                progressBar.style.width = currentBackupState.width + '%';
+
                 if (willFail && currentBackupState.width >= failurePoint) {
                     clearInterval(currentBackupState.interval);
                     progressBar.style.backgroundColor = 'var(--status-error)';
-                    errorModal.classList.add('active');
+
+                    // Inject specific error
+                    document.getElementById('error-message-text').innerText = selectedError;
+                    document.getElementById('error-modal').classList.add('active');
 
                     // Log Failed Entry
-                    addHistoryEntry(currentBackupState.dbChecked, currentBackupState.docsChecked, 'Failed');
+                    addHistoryEntry(currentBackupState.dbChecked, currentBackupState.docsChecked, 'Failed', selectedError);
+
+                    // Mock Audit Log Event
+                    console.log(`[AUDIT LOG] Backup Failed: ${selectedError} at ${new Date().toLocaleString()}`);
                     return;
                 }
 
@@ -998,43 +1163,47 @@
                         alert('Manual backup completed successfully!');
                     }, 500);
                 } else {
-                    currentBackupState.width++;
-                    progressBar.style.width = currentBackupState.width + '%';
                     progressPercent.textContent = currentBackupState.width + '%';
                 }
             }, 30);
         }
 
-        function addHistoryEntry(dbChecked, docsChecked, status) {
+        function addHistoryEntry(dbChecked, docsChecked, status, errorMsg = '') {
             const historyTableBody = document.querySelector('#manual-history-table tbody');
+            const USERS = ['Admin', 'Rajesh Gupta', 'Priya Sharma', 'Arjun Dev', 'System'];
             const now = new Date();
-            const dateStr = now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
-            const timeStr = String(now.getHours()) + String(now.getMinutes()) + String(now.getSeconds());
-            const fileName = `manual_${dateStr}_${timeStr}.zip`;
+            const timestamp = now.toISOString().replace(/[-:T]/g, '').slice(0, 8);
+            const fileName = (status === 'Failed' ? 'fail_' : 'manual_') + timestamp + '.zip';
 
             let typeStr = "Database";
             if (dbChecked && docsChecked) typeStr = "Database + Docs";
             else if (docsChecked) typeStr = "Documents";
 
-            let statusBadge = `<span class="badge badge-active">Active</span>`;
+            let statusBadge = `<span class="badge badge-success">Success</span>`;
             let actionBtn = `
                 <button class="btn-action" title="Download">
                     <i class="fa-solid fa-download"></i>
                 </button>`;
 
             if (status === 'Failed') {
-                statusBadge = `<span class="badge badge-error">Failed</span>`;
+                statusBadge = `<span class="badge badge-failure">Failure</span>`;
                 actionBtn = `
-                    <button class="btn-action" title="Resume" onclick="resumeBackup()">
-                        <i class="fa-solid fa-play"></i>
+                    <button class="btn-action" title="Details" onclick="showFailureDetails('${errorMsg.replace(/'/g, "\\'")}')">
+                        <i class="fa-solid fa-circle-info"></i>
                     </button>`;
             }
 
             const newRow = document.createElement('tr');
+            const timeFormatted = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            const createdBy = USERS[Math.floor(Math.random() * USERS.length)];
+
             newRow.innerHTML = `
+                <td style="text-align: center;">-</td>
                 <td>${fileName}</td>
+                <td style="color: var(--text-muted); font-size: 13px;">${timeFormatted}</td>
                 <td>${typeStr}</td>
-                <td>Admin</td>
+                <td>${createdBy}</td>
                 <td>${status === 'Failed' ? '0 MB' : '48 MB'}</td>
                 <td>${statusBadge}</td>
                 <td style="text-align: right;">
@@ -1042,25 +1211,55 @@
                 </td>
             `;
 
-            // Insert at the top
-            historyTableBody.insertBefore(newRow, historyTableBody.firstChild);
+            // Append at the bottom
+            historyTableBody.appendChild(newRow);
+
+            // Correct the sequencing for all rows
+            reindexTable('manual-history-table');
         }
 
-        function resumeBackup() {
-            document.getElementById('error-modal').classList.remove('active');
-
-            // Reset visual error state
-            const progressBar = document.getElementById('progress-bar');
-            progressBar.style.backgroundColor = 'var(--primary-blue)';
-
-            // Mark as resumed so it forces success
-            currentBackupState.isResumed = true;
-            runManualBackup(true);
+        function reindexTable(tableId) {
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            if (!tbody) return;
+            const rows = tbody.rows;
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].cells[0].innerText = i + 1;
+            }
         }
 
         function cancelBackup() {
-            document.getElementById('error-modal').classList.remove('active');
+            const modal = document.getElementById('error-modal');
+            modal.classList.remove('active');
+            modal.classList.remove('minimized');
+            modal.querySelector('.modal-content').classList.remove('minimized');
             resetUI();
+        }
+
+        function showFailureDetails(errorMsg) {
+            document.getElementById('failure-log-content').innerText = errorMsg;
+            document.getElementById('failure-details-modal').classList.add('active');
+        }
+
+        function closeLogModal() {
+            const modal = document.getElementById('failure-details-modal');
+            modal.classList.remove('active');
+            modal.classList.remove('minimized');
+            modal.querySelector('.modal-content').classList.remove('minimized');
+        }
+
+        function toggleMinimize(btn) {
+            const modal = btn.closest('.modal-overlay');
+            const content = modal.querySelector('.modal-content');
+            const isMinimized = content.classList.toggle('minimized');
+            modal.classList.toggle('minimized', isMinimized);
+
+            // Update icon
+            const icon = btn.querySelector('i');
+            if (isMinimized) {
+                icon.classList.replace('fa-minus', 'fa-up-right-from-square');
+            } else {
+                icon.classList.replace('fa-up-right-from-square', 'fa-minus');
+            }
         }
 
         function resetUI() {
@@ -1088,6 +1287,22 @@
                 container.style.display = 'none';
             }
         }
+
+        function saveScheduledSettings() {
+            const btn = document.querySelector('#tab-scheduled .btn-primary');
+            const originalContent = btn.innerHTML;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+                alert('Scheduled backup settings have been saved successfully!');
+            }, 800);
+        }
+
+
     </script>
 </body>
 
