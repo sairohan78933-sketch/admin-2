@@ -55,6 +55,16 @@
             overflow: hidden;
         }
 
+        /* Hide Scrollbars */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        * {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         /* --- Sidebar (Consistent with Dashboard) --- */
         .sidebar {
             width: 260px;
@@ -287,21 +297,20 @@
             font-size: 14px;
         }
 
-        .data-table th {
-            background: #F8F9FA;
-            padding: 12px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--text-secondary);
-            border-bottom: 1px solid var(--border-light);
-            white-space: nowrap;
-        }
-
+        .data-table th,
         .data-table td {
             padding: 12px 16px;
             border-bottom: 1px solid var(--border-light);
             color: var(--text-primary);
             vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .data-table th {
+            background: #F8F9FA;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
 
         .data-table tbody tr:hover {
@@ -316,10 +325,13 @@
         .badge {
             display: inline-flex;
             align-items: center;
-            padding: 4px 10px;
+            justify-content: center;
+            padding: 4px 12px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
+            min-width: 90px;
+            text-align: center;
         }
 
         .badge-active {
@@ -348,7 +360,15 @@
             display: flex;
             gap: 12px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            align-items: center;
+        }
+
+        .filters-bar .form-control,
+        .filters-bar .btn,
+        .filters-bar input[type="date"] {
+            height: 40px;
+            display: flex;
             align-items: center;
         }
 
@@ -428,6 +448,53 @@
             color: var(--status-error);
         }
 
+
+        /* --- Toggle Switch --- */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary-blue);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(18px);
+        }
+
         /* --- Modal --- */
         .modal-overlay {
             position: fixed;
@@ -470,19 +537,89 @@
         }
 
         .modal-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border-light);
+            background-color: var(--primary-blue);
+            padding: 10px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: white;
         }
 
         .modal-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 10px;
+            color: white !important;
+        }
+
+        .modal-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .modal-control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .modal-control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-control-btn.close-btn:hover {
+            background: #e81123;
+        }
+
+        /* Minimized State */
+        .modal-overlay.minimized {
+            background: transparent;
+            backdrop-filter: none;
+            pointer-events: none;
+        }
+
+        .modal-content.minimized {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-width: 300px;
+            transform: none !important;
+            animation: slideToCorner 0.3s ease-out;
+            pointer-events: auto;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--primary-blue);
+        }
+
+        @keyframes slideToCorner {
+            from {
+                transform: scale(0.9) translate(-50%, -50%);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translate(0, 0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content.minimized .modal-body,
+        .modal-content.minimized .modal-footer {
+            display: none;
+        }
+
+        .modal-content.minimized .modal-header {
+            border-radius: 8px;
         }
 
         .modal-body {
@@ -491,11 +628,55 @@
 
         .modal-footer {
             padding: 16px 24px;
-            background: #F8F9FA;
-            border-top: 1px solid var(--border-light);
+            background: transparent;
             display: flex;
             justify-content: flex-end;
             gap: 12px;
+        }
+
+        /* Audit History Style for Modal */
+        .audit-history-section {
+            margin-top: 20px;
+            padding-top: 16px;
+        }
+
+        .audit-history-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .audit-history-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+
+        .audit-history-table th {
+            text-align: left;
+            padding: 8px;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .audit-history-table td {
+            padding: 8px;
+            border-bottom: 1px solid #f9fafb;
+            color: var(--text-secondary);
+        }
+
+        .audit-history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .audit-history-table .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
         }
 
         /* --- View Switching Utilities --- */
@@ -562,7 +743,7 @@
             <a href="#" class="nav-item active"><i class="fa-solid fa-user-shield"></i>
                 User Management</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Backup & Restore</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Backup Configuration</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
         </nav>
     </aside>
@@ -634,16 +815,15 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th style="width: 40px;">
-                                    </th>
-                                    <th>User ID</th>
-                                    <th>Full Name <i class="fa-solid fa-sort fa-xs"></i></th>
-                                    <th>Email Address</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Last Login</th>
-                                    <th>Created On</th>
-                                    <th style="text-align: right;">Actions</th>
+                                    <th style="width: 40px;"></th>
+                                    <th style="width: 100px;">User ID</th>
+                                    <th style="width: 180px;">Full Name <i class="fa-solid fa-sort fa-xs"></i></th>
+                                    <th style="width: 220px;">Email Address</th>
+                                    <th style="width: 120px;">Role</th>
+                                    <th style="width: 120px;">Status</th>
+                                    <th style="width: 120px;">Last Login</th>
+                                    <th style="width: 120px;">Created On</th>
+                                    <th style="text-align: right; width: 140px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -651,23 +831,27 @@
                                 <tr>
                                     <td><input type="checkbox"></td>
                                     <td style="font-family: monospace; color: var(--text-muted);">USR-001</td>
-                                    <td style="font-weight: 500;">Sarah Jenkins</td>
-                                    <td>s.jenkins@smarthire.com</td>
+                                    <td style="font-weight: 500;">Ananya Sharma</td>
+                                    <td>a.sharma@smarthire.in</td>
                                     <td><span class="badge badge-role">Admin</span></td>
                                     <td><span class="badge badge-active">Active</span></td>
                                     <td style="font-size: 13px; color: var(--text-secondary);">Just now</td>
                                     <td style="font-size: 13px; color: var(--text-secondary);">Jan 12, 2024</td>
                                     <td class="action-cell">
-                                        <button class="action-btn-trigger" onclick="toggleMenu('menu1')"><i
-                                                class="fa-solid fa-ellipsis-vertical"></i></button>
-                                        <div id="menu1" class="action-menu">
-                                            <div class="action-item" onclick="switchView('edit')"><i
-                                                    class="fa-regular fa-pen-to-square"></i> Edit</div>
-                                            <div class="action-item"><i class="fa-solid fa-clock-rotate-left"></i>
-                                                Activity</div>
-                                            <div class="action-item danger"
-                                                onclick="openDeactivateModal('Sarah Jenkins')"><i
-                                                    class="fa-solid fa-ban"></i> Disable</div>
+                                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                            <button class="btn btn-secondary btn-sm" onclick="switchView('edit')"
+                                                title="Edit">
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+                                            <button class="btn btn-secondary btn-sm" title="Activity"
+                                                onclick="showAuditHistory('Ananya Sharma', false)">
+                                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                            </button>
+                                            <label class="toggle-switch" title="Toggle Status">
+                                                <input type="checkbox" checked
+                                                    onchange="handleToggleChange(this, 'Ananya Sharma', 'USR-001')">
+                                                <span class="slider"></span>
+                                            </label>
                                         </div>
                                     </td>
                                 </tr>
@@ -675,23 +859,27 @@
                                 <tr>
                                     <td><input type="checkbox"></td>
                                     <td style="font-family: monospace; color: var(--text-muted);">USR-002</td>
-                                    <td style="font-weight: 500;">Michael Torres</td>
-                                    <td>m.torres@smarthire.com</td>
+                                    <td style="font-weight: 500;">Rahul Kapoor</td>
+                                    <td>r.kapoor@smarthire.in</td>
                                     <td><span class="badge badge-role">Recruiter</span></td>
                                     <td><span class="badge badge-active">Active</span></td>
                                     <td style="font-size: 13px; color: var(--text-secondary);">2 hours ago</td>
                                     <td style="font-size: 13px; color: var(--text-secondary);">Feb 04, 2024</td>
                                     <td class="action-cell">
-                                        <button class="action-btn-trigger" onclick="toggleMenu('menu2')"><i
-                                                class="fa-solid fa-ellipsis-vertical"></i></button>
-                                        <div id="menu2" class="action-menu">
-                                            <div class="action-item" onclick="switchView('edit')"><i
-                                                    class="fa-regular fa-pen-to-square"></i> Edit</div>
-                                            <div class="action-item"><i class="fa-solid fa-clock-rotate-left"></i>
-                                                Activity</div>
-                                            <div class="action-item danger"
-                                                onclick="openDeactivateModal('Michael Torres')"><i
-                                                    class="fa-solid fa-ban"></i> Disable</div>
+                                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                            <button class="btn btn-secondary btn-sm" onclick="switchView('edit')"
+                                                title="Edit">
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+                                            <button class="btn btn-secondary btn-sm" title="Activity"
+                                                onclick="showAuditHistory('Rahul Kapoor', false)">
+                                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                            </button>
+                                            <label class="toggle-switch" title="Toggle Status">
+                                                <input type="checkbox" checked
+                                                    onchange="handleToggleChange(this, 'Rahul Kapoor', 'USR-002')">
+                                                <span class="slider"></span>
+                                            </label>
                                         </div>
                                     </td>
                                 </tr>
@@ -699,22 +887,27 @@
                                 <tr>
                                     <td><input type="checkbox"></td>
                                     <td style="font-family: monospace; color: var(--text-muted);">USR-003</td>
-                                    <td style="font-weight: 500;">David Chen</td>
-                                    <td>d.chen@smarthire.com</td>
+                                    <td style="font-weight: 500;">Vikram Malhotra</td>
+                                    <td>v.malhotra@smarthire.in</td>
                                     <td><span class="badge badge-role">HR Manager</span></td>
-                                    <td><span class="badge badge-disabled">Disabled</span></td>
+                                    <td><span class="badge badge-disabled">Inactive</span></td>
                                     <td style="font-size: 13px; color: var(--text-secondary);">14 days ago</td>
                                     <td style="font-size: 13px; color: var(--text-secondary);">Mar 10, 2024</td>
                                     <td class="action-cell">
-                                        <button class="action-btn-trigger" onclick="toggleMenu('menu3')"><i
-                                                class="fa-solid fa-ellipsis-vertical"></i></button>
-                                        <div id="menu3" class="action-menu">
-                                            <div class="action-item" onclick="switchView('edit')"><i
-                                                    class="fa-regular fa-pen-to-square"></i> Edit</div>
-                                            <div class="action-item"><i class="fa-solid fa-clock-rotate-left"></i>
-                                                Activity</div>
-                                            <div class="action-item danger"><i class="fa-solid fa-trash"></i> Delete
-                                            </div>
+                                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                            <button class="btn btn-secondary btn-sm" onclick="switchView('edit')"
+                                                title="Edit">
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+                                            <button class="btn btn-secondary btn-sm" title="Activity"
+                                                onclick="showAuditHistory('Vikram Malhotra', false)">
+                                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                            </button>
+                                            <label class="toggle-switch" title="Toggle Status">
+                                                <input type="checkbox"
+                                                    onchange="handleToggleChange(this, 'Vikram Malhotra', 'USR-003')">
+                                                <span class="slider"></span>
+                                            </label>
                                         </div>
                                     </td>
                                 </tr>
@@ -750,7 +943,7 @@
                     <form onsubmit="event.preventDefault(); switchView('list'); alert('User created successfully!');">
                         <div class="form-group">
                             <label class="form-label">Full Name <span class="required-star">*</span></label>
-                            <input type="text" class="form-control" placeholder="e.g. John Doe" required>
+                            <input type="text" class="form-control" placeholder="e.g. Arjun Dev" required>
                         </div>
 
                         <div class="form-group">
@@ -769,7 +962,7 @@
                             </select>
                         </div>
 
-             
+
 
                         <div class="form-group">
                             <label class="form-label">Temporary Password</label>
@@ -832,7 +1025,7 @@
                                 </select>
                             </div>
 
-                
+
 
                             <div class="form-group">
                                 <label class="form-label">Account Status</label>
@@ -884,7 +1077,7 @@
                         </div>
 
                         <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-light);">
-                            <a href="#"
+                            <a href="javascript:void(0)" onclick="showAuditHistory('Sarah Jenkins', false)"
                                 style="font-size: 13px; color: var(--primary-blue); text-decoration: none; display: flex; align-items: center; gap: 6px;">
                                 <i class="fa-solid fa-list-ul"></i> View Audit Log
                             </a>
@@ -902,21 +1095,26 @@
     <div id="modal-deactivate" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title text-danger" style="color: var(--status-error);">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Disable User Account
+                <div class="modal-title" id="modal-title-main">
+                    <i id="modal-inner-icon" class="fa-solid fa-triangle-exclamation"></i> <span
+                        id="modal-inner-title">Disable User Account</span>
                 </div>
-                <button onclick="closeDeactivateModal()"
-                    style="background:none; border:none; cursor:pointer; font-size: 18px; color: var(--text-secondary);"><i
-                        class="fa-solid fa-xmark"></i></button>
+                <div class="modal-controls">
+                    <button class="modal-control-btn" onclick="toggleMinimize(this)" title="Minimize/Restore"><i
+                            class="fa-solid fa-minus"></i></button>
+                    <button class="modal-control-btn close-btn" onclick="closeDeactivateModal()" title="Close"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
             <div class="modal-body">
-                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
+                <p id="modal-description-text"
+                    style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
                     Are you sure you want to disable <strong id="modal-user-name"
                         style="color: var(--text-primary);">User</strong>?
                     This will immediately revoke their system access and terminate active sessions.
                 </p>
 
-                <div class="form-group">
+                <div class="form-group" id="deactivate-reason-group">
                     <label class="form-label">Reason for Deactivation <span class="required-star">*</span></label>
                     <select class="form-control">
                         <option value="">Select a reason...</option>
@@ -927,81 +1125,208 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Additional Comments (Optional)</label>
-                    <textarea class="form-control" rows="3" placeholder="Enter details for the audit log..."></textarea>
+                <!-- Recent Account Activity Integration -->
+                <div class="audit-history-section">
+                    <div class="audit-history-title">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Recent Account Activity
+                    </div>
+                    <div
+                        style="background: #fdfdfd; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden;">
+                        <table class="audit-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-audit-history">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div
-                    style="background: #FFF5F5; padding: 12px; border-radius: 6px; font-size: 12px; color: #C92A2A; display: flex; gap: 8px;">
-                    <i class="fa-solid fa-info-circle" style="margin-top: 2px;"></i>
-                    <span>This action will be recorded in the system audit log.</span>
+                <div class="modal-footer" style="padding-top: 10px;">
+                    <button class="btn btn-secondary"
+                        style="background: transparent; border: 1px solid var(--border-light); color: var(--text-secondary);"
+                        onclick="closeDeactivateModal()">Cancel</button>
+                    <button id="modal-confirm-btn" class="btn btn-warning"
+                        style="background: transparent; border: 1px solid var(--status-warning); color: var(--status-warning);"
+                        onclick="confirmStatusChange()">Mark
+                        Inactive</button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeDeactivateModal()">Cancel</button>
-                <button class="btn btn-danger"
-                    onclick="closeDeactivateModal(); alert('User disabled successfully.');">Confirm Disable</button>
             </div>
         </div>
-    </div>
 
-    <script>
-        // --- View Switching Logic ---
-        function switchView(viewName) {
-            // Hide all views
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        <script>
+            // --- View Switching Logic ---
+            function switchView(viewName) {
+                // Hide all views
+                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
 
-            // Show requested view
-            if (viewName === 'list') {
-                document.getElementById('view-user-list').classList.add('active');
-            } else if (viewName === 'create') {
-                document.getElementById('view-create-user').classList.add('active');
-            } else if (viewName === 'edit') {
-                document.getElementById('view-edit-user').classList.add('active');
+                // Show requested view
+                if (viewName === 'list') {
+                    document.getElementById('view-user-list').classList.add('active');
+                } else if (viewName === 'create') {
+                    document.getElementById('view-create-user').classList.add('active');
+                } else if (viewName === 'edit') {
+                    document.getElementById('view-edit-user').classList.add('active');
+                }
             }
-        }
 
-        // --- Action Menu Logic ---
-        function toggleMenu(menuId) {
-            // Close all other menus first
-            document.querySelectorAll('.action-menu').forEach(el => {
-                if (el.id !== menuId) el.classList.remove('show');
+            // --- Action Menu Logic ---
+            function toggleMenu(menuId) {
+                // Close all other menus first
+                document.querySelectorAll('.action-menu').forEach(el => {
+                    if (el.id !== menuId) el.classList.remove('show');
+                });
+
+                const menu = document.getElementById(menuId);
+                menu.classList.toggle('show');
+            }
+
+            // Close menus when clicking outside
+            document.addEventListener('click', function (event) {
+                if (!event.target.closest('.action-cell')) {
+                    document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('show'));
+                }
             });
 
-            const menu = document.getElementById(menuId);
-            menu.classList.toggle('show');
-        }
+            // --- Toggle Switch Logic ---
+            let pendingToggle = null;
 
-        // Close menus when clicking outside
-        document.addEventListener('click', function (event) {
-            if (!event.target.closest('.action-cell')) {
+            function handleToggleChange(checkbox, userName, userId) {
+                if (!checkbox.checked) {
+                    // Trying to deactivate - REVERT IMMEDIATELY so it stays ON while modal is open
+                    checkbox.checked = true;
+                    pendingToggle = checkbox;
+                    openDeactivateModal(userName);
+                } else {
+                    // Trying to activate
+                    updateUserStatusBadge(userId, 'Active');
+                    alert(`${userName} has been activated successfully.`);
+                }
+            }
+
+            function confirmStatusChange() {
+                if (pendingToggle) {
+                    const row = pendingToggle.closest('tr');
+                    const userId = row.querySelector('td:nth-child(2)').textContent;
+                    // Apply the OFF state now
+                    pendingToggle.checked = false;
+                    updateUserStatusBadge(userId, 'Inactive');
+                }
+                document.getElementById('modal-deactivate').classList.remove('show');
+                alert('Action completed successfully');
+                pendingToggle = null;
+            }
+
+            function updateUserStatusBadge(userId, status) {
+                const rows = document.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const idTd = row.querySelector('td:nth-child(2)');
+                    if (idTd && idTd.textContent === userId) {
+                        const statusTd = row.querySelector('td:nth-child(6)');
+                        if (status === 'Active') {
+                            statusTd.innerHTML = '<span class="badge badge-active">Active</span>';
+                        } else {
+                            statusTd.innerHTML = '<span class="badge badge-disabled">Inactive</span>';
+                        }
+                    }
+                });
+            }
+
+            // --- Modal Logic ---
+            function openDeactivateModal(userName) {
+                showAuditHistory(userName, true);
+            }
+
+            function populateAuditHistory(userName) {
+                const historyBody = document.getElementById('modal-audit-history');
+                const mockHistory = [
+                    { time: '2024-05-18 10:42', action: 'Login', details: 'Successful login from IP 192.168.1.45' },
+                    { time: '2024-05-15 14:20', action: 'Update', details: 'Changed password' },
+                    { time: '2024-05-12 09:15', action: 'Profile', details: 'Updated contact number' }
+                ];
+
+                historyBody.innerHTML = mockHistory.map(item => `
+                    <tr>
+                        <td class="mono">${item.time}</td>
+                        <td><span class="badge ${item.action === 'Login' ? 'badge-active' : 'badge-role'}" style="min-width: 60px; font-size: 10px;">${item.action}</span></td>
+                        <td>${item.details}</td>
+                    </tr>
+                `).join('');
+            }
+
+            function showAuditHistory(userName, isDeactivation) {
+                // Update Modal Content
+                const titleText = document.getElementById('modal-inner-title');
+                const titleIcon = document.getElementById('modal-inner-icon');
+                const titleWrapper = document.getElementById('modal-title-main');
+                const descText = document.getElementById('modal-description-text');
+                const reasonGroup = document.getElementById('deactivate-reason-group');
+                const confirmBtn = document.getElementById('modal-confirm-btn');
+                const userNameEl = document.getElementById('modal-user-name');
+
+                userNameEl.textContent = userName;
+                populateAuditHistory(userName);
+
+                if (isDeactivation) {
+                    titleText.textContent = "Disable User Account";
+                    titleIcon.className = "fa-solid fa-triangle-exclamation";
+                    titleWrapper.style.color = "var(--status-error)";
+                    descText.style.display = "block";
+                    reasonGroup.style.display = "block";
+                    confirmBtn.style.display = "block";
+                    confirmBtn.textContent = "Mark Inactive";
+                } else {
+                    titleText.textContent = "Account Activity: " + userName;
+                    titleIcon.className = "fa-solid fa-clock-rotate-left";
+                    titleWrapper.style.color = "var(--primary-blue)";
+                    descText.style.display = "none";
+                    reasonGroup.style.display = "none";
+                    confirmBtn.style.display = "none";
+                }
+
+                document.getElementById('modal-deactivate').classList.add('show');
+                // Close any open menus
                 document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('show'));
             }
-        });
 
-        // --- Modal Logic ---
-        function openDeactivateModal(userName) {
-            document.getElementById('modal-user-name').textContent = userName;
-            document.getElementById('modal-deactivate').classList.add('show');
-            // Close any open menus
-            document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('show'));
-        }
-
-        function closeDeactivateModal() {
-            document.getElementById('modal-deactivate').classList.remove('show');
-        }
-
-        // --- Bulk Actions Logic ---
-        function toggleBulkActions(checkbox) {
-            const bar = document.getElementById('bulkActionBar');
-            if (checkbox.checked) {
-                bar.classList.add('show');
-            } else {
-                bar.classList.remove('show');
+            function closeDeactivateModal() {
+                const modal = document.getElementById('modal-deactivate');
+                modal.classList.remove('show');
+                modal.classList.remove('minimized');
+                modal.querySelector('.modal-content').classList.remove('minimized');
+                pendingToggle = null;
             }
-        }
-    </script>
+
+            function toggleMinimize(btn) {
+                const modal = btn.closest('.modal-overlay');
+                const content = modal.querySelector('.modal-content');
+                const isMinimized = content.classList.toggle('minimized');
+                modal.classList.toggle('minimized', isMinimized);
+
+                // Update icon
+                const icon = btn.querySelector('i');
+                if (isMinimized) {
+                    icon.classList.replace('fa-minus', 'fa-up-right-from-square');
+                } else {
+                    icon.classList.replace('fa-up-right-from-square', 'fa-minus');
+                }
+            }
+
+            // --- Bulk Actions Logic ---
+            function toggleBulkActions(checkbox) {
+                const bar = document.getElementById('bulkActionBar');
+                if (checkbox.checked) {
+                    bar.classList.add('show');
+                } else {
+                    bar.classList.remove('show');
+                }
+            }
+        </script>
 </body>
 
 </html>
