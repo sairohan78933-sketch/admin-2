@@ -573,7 +573,7 @@
             <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i>
                 User Management</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Backup & Restore</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Backup Configuration</a>
             <a href="#" class="nav-item active"><i class="fa-solid fa-history"></i> Audit Logs</a>
         </nav>
     </aside>
@@ -629,6 +629,7 @@
                                     <option value="Candidates">Candidates</option>
                                     <option value="Analysis Results">Analysis Results</option>
                                     <option value="Scoring Rules">Scoring Rules</option>
+                                    <option value="System Backups">System Backups</option>
                                 </select>
                             </div>
                             <div class="form-col" style="flex: 1;">
@@ -650,7 +651,6 @@
                                 <label class="form-label">Search</label>
                                 <div style="display: flex; gap: 10px;">
                                     <input type="text" class="form-control" id="userFilter" placeholder="User...">
-                                    <input type="text" class="form-control" id="pkFilter" placeholder="Primary Key...">
                                 </div>
                             </div>
                             <div class="form-col"
@@ -719,9 +719,9 @@
         const MOCK_DATA = [];
 
         // --- Mock Data Generation ---
-        const TABLES = ['Users', 'Job Descriptions', 'Candidates', 'Analysis Results', 'Scoring Rules'];
-        const ACTIONS = ['Insert', 'Update'];
-        const USERS = ['Admin', 'Sarah Jenkins', 'Michael Torres', 'Emily Wu', 'System'];
+        const TABLES = ['Users', 'Job Descriptions', 'Candidates', 'Analysis Results', 'Scoring Rules', 'System Backups'];
+        const ACTIONS = ['Insert', 'Update', 'Error'];
+        const USERS = ['Admin', 'Rajesh Gupta', 'Priya Sharma', 'Arjun Dev', 'System'];
 
         function generateMockData() {
             const data = [];
@@ -774,6 +774,13 @@
                         oldValue = 'Inactive';
                         newValue = 'Active';
                         break;
+                    case 'System Backups':
+                        pkPrefix = 'BKUP';
+                        action = Math.random() > 0.3 ? 'Insert' : 'Error';
+                        field = 'Status';
+                        oldValue = '';
+                        newValue = action === 'Insert' ? 'Success' : 'Failure (Storage Quota Exceeded)';
+                        break;
                 }
 
                 MOCK_DATA.push({
@@ -809,7 +816,6 @@
             const table = document.getElementById('tableFilter').value;
             const action = document.getElementById('actionFilter').value;
             const user = document.getElementById('userFilter').value.toLowerCase();
-            const pk = document.getElementById('pkFilter').value.toLowerCase();
             const start = document.getElementById('dateStart').value;
             const end = document.getElementById('dateEnd').value;
 
@@ -817,13 +823,12 @@
                 const matchesTable = !table || item.table === table;
                 const matchesAction = !action || item.action === action;
                 const matchesUser = !user || item.user.toLowerCase().includes(user);
-                const matchesPk = !pk || item.pk.toLowerCase().includes(pk);
 
                 let matchesDate = true;
                 if (start) matchesDate = matchesDate && new Date(item.timestamp) >= new Date(start);
                 if (end) matchesDate = matchesDate && new Date(item.timestamp) <= new Date(end + 'T23:59:59');
 
-                return matchesTable && matchesAction && matchesUser && matchesPk && matchesDate;
+                return matchesTable && matchesAction && matchesUser && matchesDate;
             });
 
             // Toggle Value Columns Visibility - REMOVED (Review Refinement)
@@ -843,7 +848,6 @@
             document.getElementById('tableFilter').value = '';
             document.getElementById('actionFilter').value = '';
             document.getElementById('userFilter').value = '';
-            document.getElementById('pkFilter').value = '';
             document.getElementById('dateStart').value = '';
             document.getElementById('dateEnd').value = '';
             applyFilters();
@@ -869,6 +873,7 @@
                 let badgeClass = 'badge-info';
                 if (item.action === 'Insert') badgeClass = 'badge-success';
                 if (item.action === 'Update') badgeClass = 'badge-warning';
+                if (item.action === 'Error' || item.action === 'Failure') badgeClass = 'badge-failure';
 
                 // Logic: If action is 'Insert', show blank values. 
                 // Otherwise (Update), show actual values.
