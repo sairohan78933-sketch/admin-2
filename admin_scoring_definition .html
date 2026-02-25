@@ -383,17 +383,114 @@
             vertical-align: middle;
         }
 
-        .data-table tbody tr:hover {
+        .dimension-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dimension-row:hover {
             background: #F8F9FA;
         }
 
-        .data-table tbody tr:last-child td {
-            border-bottom: none;
+        .dimension-row.active {
+            background: rgba(59, 91, 219, 0.02);
         }
 
-        .data-table .form-control {
-            padding: 6px 10px;
-            height: 34px;
+        .detail-row {
+            display: none;
+            background: #fdfdfd;
+        }
+
+        .detail-row.show {
+            display: table-row;
+        }
+
+        .detail-container {
+            padding: 0 40px 24px 76px;
+            /* Align with dimension name */
+        }
+
+        .param-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        .param-group {
+            margin-bottom: 12px;
+        }
+
+        .param-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .param-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        .indicator-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .indicator-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .indicator-item.positive i {
+            color: var(--status-success);
+        }
+
+        .indicator-item.negative i {
+            color: var(--status-error);
+        }
+
+        .anchors-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .anchor-pill {
+            padding: 2px 10px;
+            background: #f1f3f5;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
+        .info-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px;
+        }
+
+        .info-btn:hover {
+            color: var(--primary-blue);
+        }
+
+        .dimension-row.active .info-btn {
+            color: var(--primary-blue);
         }
 
         /* --- Status Badges --- */
@@ -723,97 +820,527 @@
                             </thead>
                             <tbody>
                                 <!-- Dimension 1 -->
-                                <tr id="dim-1">
+                                <tr id="dim-1" class="dimension-row" onclick="toggleDetails('dim-1')">
                                     <td>1</td>
-                                    <td><strong>Skill Set Score</strong></td>
+                                    <td><strong>Skill Set Score</strong> <button class="info-btn"><i
+                                                class="fa-solid fa-circle-info"></i></button></td>
                                     <td><span class="badge badge-active">Active</span></td>
-                                    <td>
+                                    <td onclick="event.stopPropagation()">
                                         <label class="toggle-switch">
                                             <input type="checkbox" checked onchange="toggleStatus('dim-1', this)">
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                 </tr>
+                                <tr id="dim-1-details" class="detail-row">
+                                    <td colspan="4">
+                                        <div class="detail-container">
+                                            <div class="param-grid">
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Definition</span>
+                                                        <p class="param-text">Measures how well candidate skills match
+                                                            JD
+                                                            required skills.</p>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Comparison Logic</span>
+                                                        <p class="param-text">Required skills from JD vs. Skills listed
+                                                            in
+                                                            resume experience sections.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Positive Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Exact skill
+                                                                match
+                                                            </li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Multiple
+                                                                required
+                                                                skills present</li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Hands-on usage
+                                                                mentioned</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Negative Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Skills only
+                                                                listed
+                                                                without experience</li>
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Partial skill
+                                                                overlap</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="param-group" style="margin-bottom: 20px;">
+                                                <span class="param-label">Evidence Rule</span>
+                                                <p class="param-text">Score only when skills explicitly mentioned.</p>
+                                            </div>
+                                            <div class="param-group">
+                                                <span class="param-label">Scoring Anchors</span>
+                                                <div class="anchors-flex">
+                                                    <span class="anchor-pill">0: No relevant skills</span>
+                                                    <span class="anchor-pill">3: Few matching</span>
+                                                    <span class="anchor-pill">5: Moderate match</span>
+                                                    <span class="anchor-pill">7: Strong match</span>
+                                                    <span class="anchor-pill">10: Full coverage</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
                                 <!-- Dimension 2 -->
-                                <tr id="dim-2">
+                                <tr id="dim-2" class="dimension-row" onclick="toggleDetails('dim-2')">
                                     <td>2</td>
-                                    <td><strong>Qualification Score</strong></td>
+                                    <td><strong>Qualification Score</strong> <button class="info-btn"><i
+                                                class="fa-solid fa-circle-info"></i></button></td>
                                     <td><span class="badge badge-active">Active</span></td>
-                                    <td>
+                                    <td onclick="event.stopPropagation()">
                                         <label class="toggle-switch">
                                             <input type="checkbox" checked onchange="toggleStatus('dim-2', this)">
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                 </tr>
+                                <tr id="dim-2-details" class="detail-row">
+                                    <td colspan="4">
+                                        <div class="detail-container">
+                                            <div class="param-grid">
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Definition</span>
+                                                        <p class="param-text">Measures alignment between required
+                                                            education
+                                                            and candidate education.</p>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Comparison Logic</span>
+                                                        <p class="param-text">JD required degree vs. Resume education
+                                                            section.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Positive Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Exact degree
+                                                                match
+                                                            </li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Equivalent
+                                                                degree
+                                                            </li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Higher
+                                                                qualification in same domain</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Negative Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Different
+                                                                field
+                                                            </li>
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Lower
+                                                                qualification</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="param-group" style="margin-bottom: 20px;">
+                                                <span class="param-label">Evidence Rule</span>
+                                                <p class="param-text">Score only if education explicitly stated.</p>
+                                            </div>
+                                            <div class="param-group">
+                                                <span class="param-label">Scoring Anchors</span>
+                                                <div class="anchors-flex">
+                                                    <span class="anchor-pill">0: No relevant</span>
+                                                    <span class="anchor-pill">3: Lower qualification</span>
+                                                    <span class="anchor-pill">5: Related but different</span>
+                                                    <span class="anchor-pill">7: Equivalent</span>
+                                                    <span class="anchor-pill">10: Exact or higher match</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
                                 <!-- Dimension 3 -->
-                                <tr id="dim-3">
+                                <tr id="dim-3" class="dimension-row" onclick="toggleDetails('dim-3')">
                                     <td>3</td>
-                                    <td><strong>Certification Score</strong></td>
+                                    <td><strong>Certification Score</strong> <button class="info-btn"><i
+                                                class="fa-solid fa-circle-info"></i></button></td>
                                     <td><span class="badge badge-active">Active</span></td>
-                                    <td>
+                                    <td onclick="event.stopPropagation()">
                                         <label class="toggle-switch">
                                             <input type="checkbox" checked onchange="toggleStatus('dim-3', this)">
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                 </tr>
+                                <tr id="dim-3-details" class="detail-row">
+                                    <td colspan="4">
+                                        <div class="detail-container">
+                                            <div class="param-grid">
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Definition</span>
+                                                        <p class="param-text">Measures relevance of certifications
+                                                            compared
+                                                            to JD requirements.</p>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Comparison Logic</span>
+                                                        <p class="param-text">JD required/preferred certifications vs.
+                                                            Resume certifications.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Positive Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Required
+                                                                certification present</li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Multiple
+                                                                relevant
+                                                                certifications</li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Recent
+                                                                certification
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Negative Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Irrelevant
+                                                                certifications</li>
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Expired (if
+                                                                imp.)
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="param-group" style="margin-bottom: 20px;">
+                                                <span class="param-label">Evidence Rule</span>
+                                                <p class="param-text">Score only if certification clearly mentioned.</p>
+                                            </div>
+                                            <div class="param-group">
+                                                <span class="param-label">Scoring Anchors</span>
+                                                <div class="anchors-flex">
+                                                    <span class="anchor-pill">0: None</span>
+                                                    <span class="anchor-pill">3: Weak relevance</span>
+                                                    <span class="anchor-pill">5: Related</span>
+                                                    <span class="anchor-pill">7: Strong relevant</span>
+                                                    <span class="anchor-pill">10: Required match</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
                                 <!-- Dimension 4 -->
-                                <tr id="dim-4">
+                                <tr id="dim-4" class="dimension-row" onclick="toggleDetails('dim-4')">
                                     <td>4</td>
-                                    <td><strong>Relevant Experience Score</strong></td>
+                                    <td><strong>Relevant Experience Score</strong> <button class="info-btn"><i
+                                                class="fa-solid fa-circle-info"></i></button></td>
                                     <td><span class="badge badge-active">Active</span></td>
-                                    <td>
+                                    <td onclick="event.stopPropagation()">
                                         <label class="toggle-switch">
                                             <input type="checkbox" checked onchange="toggleStatus('dim-4', this)">
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                 </tr>
+                                <tr id="dim-4-details" class="detail-row">
+                                    <td colspan="4">
+                                        <div class="detail-container">
+                                            <div class="param-grid">
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Definition</span>
+                                                        <p class="param-text">Measures how closely candidate experience
+                                                            aligns with JD role.</p>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Comparison Logic</span>
+                                                        <p class="param-text">JD responsibilities vs. Resume role
+                                                            descriptions.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Positive Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Same job role
+                                                            </li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Similar
+                                                                responsibilities</li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Relevant
+                                                                domain
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Negative Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Different role
+                                                                scope
+                                                            </li>
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Only indirect
+                                                                experience</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="param-group" style="margin-bottom: 20px;">
+                                                <span class="param-label">Evidence Rule</span>
+                                                <p class="param-text">Score only if role description exists.</p>
+                                            </div>
+                                            <div class="param-group">
+                                                <span class="param-label">Scoring Anchors</span>
+                                                <div class="anchors-flex">
+                                                    <span class="anchor-pill">0: No relevant</span>
+                                                    <span class="anchor-pill">3: Minimal relevance</span>
+                                                    <span class="anchor-pill">5: Moderate alignment</span>
+                                                    <span class="anchor-pill">7: Strong alignment</span>
+                                                    <span class="anchor-pill">10: Highly aligned</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
                                 <!-- Dimension 5 -->
-                                <tr id="dim-5">
+                                <tr id="dim-5" class="dimension-row" onclick="toggleDetails('dim-5')">
                                     <td>5</td>
-                                    <td><strong>Overall Experience Score</strong></td>
+                                    <td><strong>Overall Experience Score</strong> <button class="info-btn"><i
+                                                class="fa-solid fa-circle-info"></i></button></td>
                                     <td><span class="badge badge-active">Active</span></td>
-                                    <td>
+                                    <td onclick="event.stopPropagation()">
                                         <label class="toggle-switch">
                                             <input type="checkbox" checked onchange="toggleStatus('dim-5', this)">
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                 </tr>
+                                <tr id="dim-5-details" class="detail-row">
+                                    <td colspan="4">
+                                        <div class="detail-container">
+                                            <div class="param-grid">
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Definition</span>
+                                                        <p class="param-text">Measures total professional experience
+                                                            against JD expectations.</p>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Comparison Logic</span>
+                                                        <p class="param-text">JD required years vs. Resume total years.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Positive Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Meets required
+                                                                years
+                                                            </li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Career
+                                                                progression
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Negative Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Below required
+                                                                experience</li>
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Major
+                                                                unexplained
+                                                                gaps</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="param-group" style="margin-bottom: 20px;">
+                                                <span class="param-label">Evidence Rule</span>
+                                                <p class="param-text">Score only if duration identifiable.</p>
+                                            </div>
+                                            <div class="param-group">
+                                                <span class="param-label">Scoring Anchors</span>
+                                                <div class="anchors-flex">
+                                                    <span class="anchor-pill">0: No experience</span>
+                                                    <span class="anchor-pill">3: Below requirement</span>
+                                                    <span class="anchor-pill">5: Meets minimum</span>
+                                                    <span class="anchor-pill">7: Exceeds requirement</span>
+                                                    <span class="anchor-pill">10: Significantly exceeds</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
                                 <!-- Dimension 6 -->
-                                <tr id="dim-6">
+                                <tr id="dim-6" class="dimension-row" onclick="toggleDetails('dim-6')">
                                     <td>6</td>
-                                    <td><strong>Key Responsibilities Score</strong></td>
+                                    <td><strong>Key Responsibilities Score</strong> <button class="info-btn"><i
+                                                class="fa-solid fa-circle-info"></i></button></td>
                                     <td><span class="badge badge-active">Active</span></td>
-                                    <td>
+                                    <td onclick="event.stopPropagation()">
                                         <label class="toggle-switch">
                                             <input type="checkbox" checked onchange="toggleStatus('dim-6', this)">
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                 </tr>
+                                <tr id="dim-6-details" class="detail-row">
+                                    <td colspan="4">
+                                        <div class="detail-container">
+                                            <div class="param-grid">
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Definition</span>
+                                                        <p class="param-text">Measures similarity between JD
+                                                            responsibilities
+                                                            and candidate duties.</p>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Comparison Logic</span>
+                                                        <p class="param-text">JD responsibility section vs. Resume
+                                                            responsibility bullets.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Positive Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Similar tasks
+                                                            </li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Similar
+                                                                ownership
+                                                                level</li>
+                                                            <li class="indicator-item positive"><i
+                                                                    class="fa-solid fa-check-circle"></i> Project
+                                                                involvement
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Negative Indicators</span>
+                                                        <ul class="indicator-list">
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Generic
+                                                                descriptions
+                                                            </li>
+                                                            <li class="indicator-item negative"><i
+                                                                    class="fa-solid fa-times-circle"></i> Different
+                                                                responsibility level</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="param-group" style="margin-bottom: 20px;">
+                                                <span class="param-label">Evidence Rule</span>
+                                                <p class="param-text">Score only if responsibilities described.</p>
+                                            </div>
+                                            <div class="param-group">
+                                                <span class="param-label">Scoring Anchors</span>
+                                                <div class="anchors-flex">
+                                                    <span class="anchor-pill">0: No overlap</span>
+                                                    <span class="anchor-pill">3: Minor overlap</span>
+                                                    <span class="anchor-pill">5: Moderate overlap</span>
+                                                    <span class="anchor-pill">7: Strong overlap</span>
+                                                    <span class="anchor-pill">10: Very high similarity</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
                                 <!-- Dimension 7 -->
-                                <tr id="dim-7">
+                                <tr id="dim-7" class="dimension-row" onclick="toggleDetails('dim-7')">
                                     <td>7</td>
-                                    <td><strong>Overall Suitability Score</strong></td>
+                                    <td><strong>Overall Suitability Score</strong> <button class="info-btn"><i
+                                                class="fa-solid fa-circle-info"></i></button></td>
                                     <td><span class="badge badge-active">Active</span></td>
-                                    <td>
+                                    <td onclick="event.stopPropagation()">
                                         <label class="toggle-switch">
                                             <input type="checkbox" checked onchange="toggleStatus('dim-7', this)">
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                 </tr>
+                                <tr id="dim-7-details" class="detail-row">
+                                    <td colspan="4">
+                                        <div class="detail-container">
+                                            <div class="param-grid">
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Definition</span>
+                                                        <p class="param-text">Weighted overall match based on all
+                                                            dimensions.</p>
+                                                    </div>
+                                                    <div class="param-group">
+                                                        <span class="param-label">Comparison Logic</span>
+                                                        <p class="param-text">System calculated aggregate score.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="param-col">
+                                                    <div class="param-group">
+                                                        <span class="param-label">Evidence Rule</span>
+                                                        <p class="param-text">Exclude dimensions marked N/A from
+                                                            calculation.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="param-group">
+                                                <span class="param-label">Scoring Anchors</span>
+                                                <div class="anchors-flex">
+                                                    <span class="anchor-pill">0: Not suitable</span>
+                                                    <span class="anchor-pill">3: Weak fit</span>
+                                                    <span class="anchor-pill">5: Average</span>
+                                                    <span class="anchor-pill">7: Strong</span>
+                                                    <span class="anchor-pill">10: Excellent match</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
-                    </div>
-                    <div
-                        style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 16px; margin-top: 24px;">
-
-                        <button class="btn btn-primary" onclick="openCreateModal()"><i class="fa-solid fa-plus"></i>
-                            Create New Dimension</button>
                     </div>
                 </div>
 
@@ -822,196 +1349,25 @@
 
     </main>
 
-    <!-- ========================================= -->
-    <!-- CREATE DIMENSION MODAL                    -->
-    <!-- ========================================= -->
-    <div id="modal-create" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <i class="fa-solid fa-plus-circle"></i> Create New Dimension
-                </div>
-                <div class="modal-controls">
-                    <button class="modal-control-btn" onclick="toggleMinimize(this)" title="Minimize/Restore"><i
-                            class="fa-solid fa-minus"></i></button>
-                    <button class="modal-control-btn close-btn" onclick="closeCreateModal()" title="Close"><i
-                            class="fa-solid fa-xmark"></i></button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Dimension Name</label>
-                    <input type="text" id="new-dimension-name" class="form-control"
-                        placeholder="e.g., Leadership Score">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeCreateModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveNewDimension()">Create Dimension</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================= -->
-    <!-- EDIT DIMENSION MODAL                      -->
-    <!-- ========================================= -->
-    <div id="modal-edit" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit Dimension
-                </div>
-                <div class="modal-controls">
-                    <button class="modal-control-btn" onclick="toggleMinimize(this)" title="Minimize/Restore"><i
-                            class="fa-solid fa-minus"></i></button>
-                    <button class="modal-control-btn close-btn" onclick="closeEditModal()" title="Close"><i
-                            class="fa-solid fa-xmark"></i></button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Dimension Name</label>
-                    <input type="text" id="edit-dimension-name" class="form-control">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveEditDimension()">Save Changes</button>
-            </div>
-        </div>
-    </div>
 
     <script>
-        let dimensionCount = 3;
         let editingRowId = null;
 
-        // --- Create Modal Logic ---
-        function openCreateModal() {
-            document.getElementById('modal-create').classList.add('show');
-            document.getElementById('new-dimension-name').value = '';
-            document.getElementById('new-dimension-name').focus();
-        }
-
-        function closeCreateModal() {
-            const modal = document.getElementById('modal-create');
-            modal.classList.remove('show');
-            modal.classList.remove('minimized');
-            modal.querySelector('.modal-content').classList.remove('minimized');
-        }
-
-        function saveNewDimension() {
-            const name = document.getElementById('new-dimension-name').value.trim();
-            if (!name) {
-                alert('Please enter a dimension name.');
-                return;
-            }
-
-            const table = document.getElementById('dimensions-table').getElementsByTagName('tbody')[0];
-            const rows = table.getElementsByTagName('tr');
-
-            // Duplicate Check
-            for (let i = 0; i < rows.length; i++) {
-                const existingName = rows[i].cells[1].textContent.trim();
-                if (existingName.toLowerCase() === name.toLowerCase()) {
-                    alert('A dimension with this name already exists. Please choose a unique name.');
-                    return;
-                }
-            }
-
-            let maxId = 0;
-            for (let i = 0; i < rows.length; i++) {
-                const idCell = rows[i].cells[0];
-                const id = parseInt(idCell.textContent);
-                if (!isNaN(id) && id > maxId) maxId = id;
-            }
-            const newId = maxId + 1;
-            const rowId = 'dim-' + newId;
-
-            // Create new row
-            const newRow = table.insertRow();
-            newRow.id = rowId;
-            newRow.innerHTML = `
-                <td>${newId}</td>
-                <td><strong>${name}</strong></td>
-                <td style="text-align: center;"><span class="badge badge-active">Active</span></td>
-                <td style="text-align: center;">
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                        <label class="toggle-switch">
-                            <input type="checkbox" checked onchange="toggleStatus('${rowId}', this)">
-                            <span class="slider"></span>
-                        </label>
-                        <button class="btn btn-secondary" onclick="openEditModal('${rowId}')" style="padding: 4px 8px; color: var(--primary-blue); border-color: transparent;">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                    </div>
-                </td>
-            `;
-
-            closeCreateModal();
-        }
-
-        // --- Edit Modal Logic ---
-        function openEditModal(rowId) {
-            editingRowId = rowId;
+        function toggleDetails(rowId) {
             const row = document.getElementById(rowId);
-            const nameCell = row.cells[1];
-            const currentName = nameCell.textContent.trim();
+            const detailRow = document.getElementById(rowId + '-details');
 
-            document.getElementById('edit-dimension-name').value = currentName;
-            document.getElementById('modal-edit').classList.add('show');
-            document.getElementById('edit-dimension-name').focus();
-        }
+            // Close other open details
+            document.querySelectorAll('.detail-row').forEach(dr => {
+                if (dr !== detailRow) dr.classList.remove('show');
+            });
+            document.querySelectorAll('.dimension-row').forEach(dr => {
+                if (dr !== row) dr.classList.remove('active');
+            });
 
-        function closeEditModal() {
-            const modal = document.getElementById('modal-edit');
-            modal.classList.remove('show');
-            modal.classList.remove('minimized');
-            modal.querySelector('.modal-content').classList.remove('minimized');
-            editingRowId = null;
-        }
-
-        function toggleMinimize(btn) {
-            const modal = btn.closest('.modal-overlay');
-            const content = modal.querySelector('.modal-content');
-            const isMinimized = content.classList.toggle('minimized');
-            modal.classList.toggle('minimized', isMinimized);
-
-            // Update icon
-            const icon = btn.querySelector('i');
-            if (isMinimized) {
-                icon.classList.replace('fa-minus', 'fa-up-right-from-square');
-            } else {
-                icon.classList.replace('fa-up-right-from-square', 'fa-minus');
-            }
-        }
-
-        function saveEditDimension() {
-            if (!editingRowId) return;
-
-            const newName = document.getElementById('edit-dimension-name').value.trim();
-            if (!newName) {
-                alert('Please enter a dimension name.');
-                return;
-            }
-
-            // Duplicate Check (exclude current row)
-            const table = document.getElementById('dimensions-table').getElementsByTagName('tbody')[0];
-            const rows = table.getElementsByTagName('tr');
-            for (let i = 0; i < rows.length; i++) {
-                if (rows[i].id === editingRowId) continue; // Skip self
-                const existingName = rows[i].cells[1].textContent.trim();
-                if (existingName.toLowerCase() === newName.toLowerCase()) {
-                    alert('A dimension with this name already exists. Please choose a unique name.');
-                    return;
-                }
-            }
-
-            const row = document.getElementById(editingRowId);
-            if (row) {
-                row.cells[1].innerHTML = `<strong>${newName}</strong>`;
-            }
-
-            closeEditModal();
+            // Toggle current
+            row.classList.toggle('active');
+            detailRow.classList.toggle('show');
         }
 
 
