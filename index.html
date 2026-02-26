@@ -735,7 +735,6 @@
                         </div>
                     </div>
                     <div class="kpi-comparison">
-                        <span>Yesterday: <strong>18</strong></span>
                         <span style="margin-left: auto;">7d Avg: <strong>15</strong></span>
                     </div>
                 </div>
@@ -799,37 +798,6 @@
                     </div>
                 </div>
 
-                <!-- 2. User Role Analytics -->
-                <div class="card">
-                    <div class="card-title">User Role Analytics</div>
-
-                    <div style="padding: 10px 0; flex-grow: 1;">
-                        <div class="list-item">
-                            <span><i class="fa-solid fa-user-tie" style="margin-right:8px; color:var(--primary)"></i>
-                                Recruiters</span>
-                            <strong style="font-size: 14px;">12</strong>
-                        </div>
-
-                        <div class="list-item"
-                            style="border-top: 1px solid var(--border-light); padding-top: 12px; margin-top: 12px;">
-                            <span><i class="fa-solid fa-user-group" style="margin-right:8px; color:var(--primary)"></i>
-                                Hiring Managers</span>
-                            <strong style="font-size: 14px;">5</strong>
-                        </div>
-
-                        <div class="list-item"
-                            style="border-top: 1px solid var(--border-light); padding-top: 12px; margin-top: 12px;">
-                            <span><i class="fa-solid fa-shield-halved"
-                                    style="margin-right:8px; color:var(--primary)"></i>
-                                Admins</span>
-                            <strong style="font-size: 14px;">3</strong>
-                        </div>
-                    </div>
-
-                    <a href="admin_usermanagement.html" class="view-all-link">Manage All Users & Permissions <i
-                            class="fa-solid fa-arrow-right" style="font-size: 10px; margin-left: 4px;"></i></a>
-                </div>
-
                 <!-- 3. Scoring Engine Status -->
                 <div class="card">
                     <div class="card-title">Scoring Engine Status</div>
@@ -886,8 +854,8 @@
                     </div>
                 </div>
 
-                <!-- 5. MySQL Connections (BIG - Span 2) -->
-                <div class="card" style="grid-column: span 2;">
+                <!-- 5. MySQL Connections (BIG - Span 3) -->
+                <div class="card" style="grid-column: span 3;">
                     <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
                         MySQL Connections
                         <span class="health-badge health-green"><i class="fa-solid fa-circle-check"></i> DB
@@ -1006,29 +974,33 @@
                 <!-- Row 5 -->
                 <!-- 8. AI Failure Monitoring (BIG - Span 3) -->
                 <div class="card" style="grid-column: span 3;">
-                    <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
-                        AI Failure Monitoring
-                        <span class="health-badge health-yellow">Alert: High Token Limit Errors</span>
+                    <div class="card-title"
+                        style="display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 30px; align-items: center; margin-bottom: 24px;">
+                        <span>AI Failure Monitoring</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Failure Category Breakdown</span>
+                            <span class="health-badge health-green" style="margin-left: auto;">Status: Normal</span>
+                        </div>
                     </div>
 
                     <div class="main-grid" style="grid-template-columns: 0.8fr 1.2fr; gap: 30px; margin-bottom: 24px;">
                         <div>
                             <div class="metric-row">
                                 <span class="metric-label">Total Failures Today</span>
-                                <span class="metric-value" style="color: var(--status-error);">28</span>
+                                <span class="metric-value" style="color: var(--status-error);">16</span>
                             </div>
                             <div class="metric-row">
                                 <span class="metric-label">Failure Rate</span>
-                                <span class="metric-value">2.2%</span>
+                                <span class="metric-value">1.2%</span>
                             </div>
                             <div class="metric-row">
                                 <span class="metric-label">Retry Success</span>
-                                <span class="metric-value" style="color: var(--status-success);">85%</span>
+                                <span class="metric-value" style="color: var(--status-success);">82%</span>
                             </div>
                             <div class="metric-row"
                                 style="margin-top: 10px; border-top: 1px solid var(--border-light); padding-top: 10px;">
                                 <span class="metric-label">Unresolved</span>
-                                <strong style="color: var(--status-error);">4</strong>
+                                <strong style="color: var(--status-error);">3</strong>
                             </div>
                         </div>
                         <div style="height: 140px;">
@@ -1048,14 +1020,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr style="background: #FFF5F5;">
-                                    <td class="metric-time">24 Feb, 05:12 PM</td>
-                                    <td>#RES-4521</td>
-                                    <td>Token Limit Exceeded</td>
-                                    <td><span class="badge badge-failed">Failed</span></td>
-                                    <td style="color: var(--status-error); font-weight: 600;">Manual Review Req.
-                                    </td>
-                                </tr>
                                 <tr>
                                     <td class="metric-time">24 Feb, 04:45 PM</td>
                                     <td>#RES-4518</td>
@@ -1068,8 +1032,92 @@
                     </div>
                 </div>
 
-                <!-- Row 6 -->
-                <!-- 9. Recent Audit Activities (BIG - Span 3) -->
+                <!-- Row 6: Token Limit Monitoring (New Dedicated Section) -->
+                <!-- 9. Token Limit Monitoring (BIG - Span 3) -->
+                <div class="card" style="grid-column: span 3;">
+                    <div class="card-title"
+                        style="display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 30px; align-items: center; margin-bottom: 24px;">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+
+                            Token Limit Monitoring
+                        </span>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 14px; font-weight: 600; color: var(--text-primary);">7-Day
+                                Trend</span>
+                            <span class="health-badge health-yellow" style="margin-left: auto;">Alert: Critical Usage
+                                Peaks</span>
+                        </div>
+                    </div>
+
+                    <div class="main-grid" style="grid-template-columns: 0.8fr 1.2fr; gap: 30px; margin-bottom: 24px;">
+                        <div>
+                            <div class="metric-row">
+                                <span class="metric-label">Total Errors Today</span>
+                                <span class="metric-value" style="color: var(--status-error);">12</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Avg. Token Usage</span>
+                                <span class="metric-value">124k</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Retry Success Rate</span>
+                                <span class="metric-value" style="color: var(--status-success);">88%</span>
+                            </div>
+                            <div class="metric-row"
+                                style="margin-top: 10px; border-top: 1px solid var(--border-light); padding-top: 10px;">
+                                <span class="metric-label">Unresolved Cases</span>
+                                <strong style="color: var(--status-error);">1</strong>
+                            </div>
+                        </div>
+                        <div style="height: 140px;">
+                            <canvas id="tokenLimitTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div
+                        style="margin-top: 20px; margin-bottom: 12px; font-size: 14px; font-weight: 600; color: var(--text-primary);">
+                        Token Limit Error Log
+                    </div>
+                    <div class="dashboard-table-container">
+                        <table class="dashboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Resume ID</th>
+                                    <th>Token Count</th>
+                                    <th>Retry Status</th>
+                                    <th>Resolution</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: #FFF5F5;">
+                                    <td class="metric-time">26 Feb, 11:20 AM</td>
+                                    <td>#RES-9821</td>
+                                    <td>1.2M</td>
+                                    <td><span class="badge badge-failed">Failed</span></td>
+                                    <td style="color: var(--status-error); font-weight: 600;">Manual Review Req.</td>
+                                </tr>
+                                <tr>
+                                    <td class="metric-time">26 Feb, 10:45 AM</td>
+                                    <td>#RES-9815</td>
+                                    <td>850k</td>
+                                    <td><span class="badge badge-success">Success</span></td>
+                                    <td>Auto-Retried (Reduced Model)</td>
+                                </tr>
+                                <tr>
+                                    <td class="metric-time">26 Feb, 09:12 AM</td>
+                                    <td>#RES-9802</td>
+                                    <td>920k</td>
+                                    <td><span class="badge badge-success">Success</span></td>
+                                    <td>Resolved (Auto)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Row 7 -->
+                <!-- 10. Recent Audit Activities (BIG - Span 3) -->
                 <div class="card" style="grid-column: span 3;">
                     <div class="card-title">Recent Audit Activities</div>
                     <div style="height: 250px; margin: 10px 0;">
@@ -1242,13 +1290,12 @@
             new Chart(ctxFailure, {
                 type: 'bar',
                 data: {
-                    labels: ['Parsing', 'Timeout', 'Token Limit', 'Automation Failure', 'DB Error'],
+                    labels: ['Parsing', 'Timeout', 'Automation Failure', 'DB Error'],
                     datasets: [{
-                        data: [8, 5, 12, 2, 1],
+                        data: [8, 5, 2, 1],
                         backgroundColor: [
                             '#3B5BDB',
                             '#F08C00',
-                            '#E03131',
                             '#1C1F2A',
                             '#8B90A0'
                         ],
@@ -1263,6 +1310,36 @@
                     scales: {
                         x: { beginAtZero: true, grid: { display: false }, ticks: { font: { size: 9 } } },
                         y: { grid: { display: false }, ticks: { font: { size: 9 } } }
+                    }
+                }
+            });
+        }
+
+        // --- Token Limit Trend (NEW - Line) ---
+        const ctxTokenTrend = document.getElementById('tokenLimitTrendChart')?.getContext('2d');
+        if (ctxTokenTrend) {
+            new Chart(ctxTokenTrend, {
+                type: 'line',
+                data: {
+                    labels: ['20 Feb', '21 Feb', '22 Feb', '23 Feb', '24 Feb', '25 Feb', 'Today'],
+                    datasets: [{
+                        label: 'Errors',
+                        data: [5, 8, 4, 15, 7, 9, 12],
+                        borderColor: '#3B5BDB',
+                        backgroundColor: 'rgba(59, 91, 219, 0.05)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+                        y: { beginAtZero: true, grid: { color: '#f1f3f5' }, ticks: { font: { size: 9 } } }
                     }
                 }
             });
