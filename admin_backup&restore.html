@@ -9,11 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Color Palette - Matching Admin Dashboard */
-            --primary-blue: #3B5BDB;
-            --primary-indigo: #364FC7;
-            --sidebar-gradient-top: #2F3E9E;
-            --sidebar-gradient-bottom: #1E2A78;
+            /* Color Palette - Synchronized with HR/Recruiter Dashboard */
+            --primary: #4A62DD;
+            --primary-indigo: #3a4eb5;
+            --sidebar-bg: #3a4eb5;
+            --header-bg: #4A62DD;
+            --info: #5FE3FB;
 
             --bg-main: #EEF1FF;
             --bg-card: #FFFFFF;
@@ -33,6 +34,7 @@
 
             --border-light: #E5E7EB;
             --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
         }
 
         * {
@@ -43,93 +45,203 @@
         }
 
         body {
-            /* display: flex; */
-            min-height: 100vh;
-            background-color: var(--bg-main);
+            height: 100vh;
+            background: var(--bg-main);
             color: var(--text-primary);
-            overflow-y: auto;
-            /* Enable Page Scroll */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        /* Sidebar */
+        /* 1) GLOBAL HEADER */
+        .global-header {
+            height: 64px;
+            background-color: var(--header-bg);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #4A62DD 0%, #5FE3FB 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(74, 98, 221, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .app-logo:hover {
+            transform: rotate(5deg) scale(1.1);
+            box-shadow: 0 6px 16px rgba(95, 227, 251, 0.4);
+        }
+
+        .app-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.2) 50%, transparent 55%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%);
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%);
+            }
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .page-context {
+            font-weight: 300;
+            opacity: 0.9;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            padding-left: 24px;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .welcome-tag {
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--info);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* LAYOUT CONTAINER */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
         .sidebar {
-            width: 260px;
-            background: linear-gradient(180deg, var(--sidebar-gradient-top) 0%, var(--sidebar-gradient-bottom) 100%);
+            width: 240px;
+            background-color: var(--sidebar-bg);
             color: white;
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
-
-            /* Fixed Sidebar */
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            overflow-y: auto;
-            z-index: 100;
-        }
-
-        .logo-area {
-            padding: 24px;
-            font-size: 22px;
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            padding: 20px 0;
         }
 
         .nav-menu {
             flex: 1;
-            padding: 20px 0;
             overflow-y: auto;
         }
 
         .nav-item {
+            padding: 12px 24px;
             display: flex;
             align-items: center;
-            padding: 12px 24px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
             font-size: 14px;
             font-weight: 500;
-            transition: 0.2s;
-            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
         }
 
         .nav-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.1);
             color: white;
         }
 
         .nav-item.active {
-            background: rgba(255, 255, 255, 0.15);
+            background-color: var(--primary);
             color: white;
-            border-left: 4px solid var(--status-info);
+            border-left: 4px solid var(--info);
         }
 
         .nav-item i {
-            width: 24px;
-            margin-right: 12px;
+            width: 20px;
             text-align: center;
         }
 
+        .config-container {
+            flex: 1;
+            overflow-y: auto;
+            /* Remove fixed padding to allow full-width tabs */
+            display: flex;
+            flex-direction: column;
+        }
+
         /* Main Content */
-        .main-content {
-            /* flex: 1; */
+        /* .main-content {
+            flex: 1;
             margin-left: 260px;
-            /* Sidebar Width */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            /* overflow: hidden; -- Remove to allow page scroll */
-        }
+        } */
 
         /* Header */
-        .header {
+        /* .header {
             padding: 20px 32px;
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--border-light);
+            background: var(--header-bg);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -137,26 +249,27 @@
             z-index: 90;
             position: sticky;
             top: 0;
-        }
+            color: white;
+        } */
 
 
-        .header-title h1 {
+        /* .header-title h1 {
             font-size: 24px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: white;
             margin-bottom: 4px;
         }
 
         .header-title p {
             font-size: 14px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .header-actions {
             display: flex;
             gap: 12px;
             align-items: center;
-        }
+        } */
 
         /* Buttons */
         .btn {
@@ -173,7 +286,7 @@
         }
 
         .btn-primary {
-            background-color: var(--primary-blue);
+            background-color: var(--primary);
             color: white;
         }
 
@@ -193,7 +306,7 @@
 
         .btn-text {
             background: none;
-            color: var(--primary-blue);
+            color: var(--primary);
             padding: 10px;
         }
 
@@ -203,34 +316,39 @@
 
         /* Tabs */
         .tabs-container {
-            padding: 0 32px;
-            background-color: var(--bg-card);
+            padding: 0 30px;
+            background-color: white;
             border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
         }
 
         .tabs {
             display: flex;
-            gap: 32px;
+            gap: 40px;
         }
 
         .tab {
-            padding: 16px 0;
-            font-size: 14px;
+            padding: 20px 0;
+            font-size: 15px;
             font-weight: 500;
             color: var(--text-secondary);
             cursor: pointer;
             border-bottom: 3px solid transparent;
-            transition: color 0.2s, border-bottom 0.2s;
+            transition: all 0.2s ease;
+            position: relative;
         }
 
         .tab:hover {
-            color: var(--primary-blue);
+            color: var(--primary);
         }
 
         .tab.active {
-            color: var(--primary-blue);
-            border-bottom: 3px solid var(--primary-blue);
-            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            font-weight: 700;
         }
 
         /* Content Area */
@@ -257,8 +375,7 @@
 
         .content-scroll {
             flex: 1;
-            /* overflow-y: auto; -- Remove internal scroll */
-            padding: 32px;
+            padding: 30px;
         }
 
         .grid-row {
@@ -316,7 +433,7 @@
 
         input[type="checkbox"],
         input[type="radio"] {
-            accent-color: var(--primary-blue);
+            accent-color: var(--primary);
             width: 16px;
             height: 16px;
             cursor: pointer;
@@ -537,7 +654,7 @@
         }
 
         input:checked+.slider {
-            background-color: var(--primary-blue);
+            background-color: var(--primary);
         }
 
         input:checked+.slider:before {
@@ -587,7 +704,7 @@
         }
 
         .modal-header {
-            background-color: var(--primary-blue);
+            background-color: var(--primary);
             padding: 10px 16px;
             display: flex;
             justify-content: space-between;
@@ -650,7 +767,7 @@
             animation: slideToCorner 0.3s ease-out;
             pointer-events: auto;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--primary-blue);
+            border: 1px solid var(--primary);
         }
 
         @keyframes slideToCorner {
@@ -685,41 +802,48 @@
 <body>
 
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="logo-area">
-            <i class="fa-solid fa-layer-group"></i> SmartHire
-        </div>
-        <nav class="nav-menu">
-            <a href="#" class="nav-item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i>
-                User Management</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
-            <a href="#" class="nav-item active"><i class="fa-solid fa-database"></i> Backup Configuration</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
-        </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-title">
-                <h1>Backup Configuration</h1>
-                <p>Manage system backups, schedules, and restoration points.</p>
+    <header class="global-header">
+        <div class="header-left">
+            <div class="logo-container">
+                <div class="app-logo">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo-text"><span style="font-weight: 400; color: rgba(255,255,255,0.85);">Smart</span>Hire
+                </div>
             </div>
-            <!-- No Global Run Backup Button as per requirements -->
-        </header>
-
-        <!-- Tabs -->
-        <div class="tabs-container">
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab('scheduled', this)">Scheduled Backup</div>
-                <div class="tab" onclick="switchTab('manual', this)">Manual Backup</div>
+            <div class="page-context">Backup Configuration</div>
+        </div>
+        <div class="header-right">
+            <span class="welcome-tag">Welcome back, Admin User !</span>
+            <div class="user-profile">
+                <div class="avatar">AD</div>
             </div>
         </div>
+    </header>
 
-        <!-- Scrollable Content -->
-        <div class="content-scroll">
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <a href="admin_dashboard.html" class="nav-item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+                <a href="admin_resume_analysis.html" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Resume
+                    Analysis</a>
+                <a href="admin_usermanagement.html" class="nav-item"><i class="fa-solid fa-user-shield"></i> User
+                    Management</a>
+                <a href="#" class="nav-item"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
+                <a href="admin_backup&config.html" class="nav-item active"><i class="fa-solid fa-database"></i> Backup
+                    Configuration</a>
+                <a href="admin_audit_logs.html" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
+            </nav>
+        </aside>
+
+        <div class="config-container">
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('scheduled', this)">Scheduled Backup</div>
+                    <div class="tab" onclick="switchTab('manual', this)">Manual Backup</div>
+                </div>
+            </div>
 
             <!-- TAB 1: Scheduled Backup -->
             <div id="tab-scheduled" class="tab-content active">
@@ -1004,7 +1128,7 @@
 
 
 
-        </div>
+    </div>
 
     </main>
 
