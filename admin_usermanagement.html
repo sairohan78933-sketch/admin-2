@@ -13,11 +13,12 @@
 
     <style>
         :root {
-            /* Color Palette - Matching Admin Dashboard */
-            --primary-blue: #3B5BDB;
-            --primary-indigo: #364FC7;
-            --sidebar-gradient-top: #2F3E9E;
-            --sidebar-gradient-bottom: #1E2A78;
+            /* Color Palette - Synchronized with HR/Recruiter Dashboard */
+            --primary: #4A62DD;
+            --primary-indigo: #3a4eb5;
+            --sidebar-bg: #3a4eb5;
+            --header-bg: #4A62DD;
+            --info: #5FE3FB;
 
             --bg-main: #EEF1FF;
             --bg-card: #FFFFFF;
@@ -37,7 +38,7 @@
 
             --border-light: #E5E7EB;
             --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
         }
 
         * {
@@ -48,10 +49,11 @@
         }
 
         body {
-            background-color: var(--bg-main);
+            height: 100vh;
+            background: var(--bg-main);
             color: var(--text-primary);
             display: flex;
-            height: 100vh;
+            flex-direction: column;
             overflow: hidden;
         }
 
@@ -65,117 +67,169 @@
             scrollbar-width: none;
         }
 
-        /* --- Sidebar (Consistent with Dashboard) --- */
-        .sidebar {
-            width: 260px;
-            background: linear-gradient(180deg, var(--sidebar-gradient-top) 0%, var(--sidebar-gradient-bottom) 100%);
+        /* 1) GLOBAL HEADER */
+        .global-header {
+            height: 64px;
+            background-color: var(--header-bg);
             color: white;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .logo-area {
-            padding: 24px;
-            font-size: 22px;
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-menu {
-            flex: 1;
-            padding: 20px 0;
-            overflow-y: auto;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 24px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: 0.2s;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .nav-item:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-item.active {
-            color: white;
-            background: rgba(255, 255, 255, 0.15);
-            border-left: 4px solid var(--status-info);
-        }
-
-        .nav-item i {
-            width: 24px;
-            margin-right: 10px;
-        }
-
-        /* --- Main Content --- */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .header {
-            height: 70px;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-light);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 30px;
+            padding: 0 24px;
             flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .header-title h2 {
-            font-size: 18px;
-            font-weight: 600;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
         }
 
-        .header-title span {
-            font-size: 13px;
-            color: var(--text-secondary);
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .header-actions {
+        .app-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #4A62DD 0%, #5FE3FB 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(74, 98, 221, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .app-logo:hover {
+            transform: rotate(5deg) scale(1.1);
+            box-shadow: 0 6px 16px rgba(95, 227, 251, 0.4);
+        }
+
+        .app-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.2) 50%, transparent 55%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%);
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%);
+            }
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .page-context {
+            font-weight: 300;
+            opacity: 0.9;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            padding-left: 24px;
+            font-size: 14px;
+        }
+
+        .header-right {
             display: flex;
             align-items: center;
             gap: 20px;
         }
 
+        .welcome-tag {
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
         }
 
         .avatar {
             width: 36px;
             height: 36px;
-            background: var(--primary-blue);
-            color: white;
+            background-color: var(--info);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
+            color: var(--primary);
+            font-weight: bold;
             font-size: 14px;
         }
 
-        /* --- Scrollable Area --- */
-        .content-scroll {
+        /* LAYOUT CONTAINER */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+            border-left: 4px solid var(--info);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .usermanagement-container {
             flex: 1;
             overflow-y: auto;
             padding: 30px;
@@ -205,7 +259,7 @@
         }
 
         .btn-primary {
-            background: var(--primary-blue);
+            background: var(--primary);
             color: white;
         }
 
@@ -263,7 +317,7 @@
         }
 
         .form-control:focus {
-            border-color: var(--primary-blue);
+            border-color: var(--primary);
         }
 
         .form-control:disabled {
@@ -351,7 +405,7 @@
 
         .badge-role {
             background: #E7F5FF;
-            color: var(--primary-blue);
+            color: var(--primary);
             border: 1px solid #D0EBFF;
         }
 
@@ -488,7 +542,7 @@
         }
 
         input:checked+.slider {
-            background-color: var(--primary-blue);
+            background-color: var(--primary);
         }
 
         input:checked+.slider:before {
@@ -519,7 +573,7 @@
             width: 100%;
             max-width: 500px;
             border-radius: 12px;
-            box-shadow: var(--shadow-modal);
+            box-shadow: var(--shadow-premium);
             overflow: hidden;
             animation: slideUp 0.3s ease-out;
         }
@@ -537,7 +591,7 @@
         }
 
         .modal-header {
-            background-color: var(--primary-blue);
+            background-color: var(--primary);
             padding: 10px 16px;
             display: flex;
             justify-content: space-between;
@@ -598,7 +652,7 @@
             animation: slideToCorner 0.3s ease-out;
             pointer-events: auto;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--primary-blue);
+            border: 1px solid var(--primary);
         }
 
         @keyframes slideToCorner {
@@ -734,38 +788,41 @@
 <body>
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="logo-area">
-            <i class="fa-solid fa-briefcase"></i> SmartHire
-        </div>
-        <nav class="nav-menu">
-            <a href="#" class="nav-item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
-            <a href="#" class="nav-item active"><i class="fa-solid fa-user-shield"></i>
-                User Management</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Backup Configuration</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
-        </nav>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-
-        <!-- HEADER -->
-        <header class="header">
-            <div class="header-title">
-                <h2>User Management</h2>
-                <span>Admin Console / Users & Roles</span>
-            </div>
-            <div class="header-actions">
-                <div class="user-profile">
-                    <div class="avatar">AD</div>
-                    <span style="font-size: 14px; font-weight: 500;">Admin User</span>
+    <header class="global-header">
+        <div class="header-left">
+            <div class="logo-container">
+                <div class="app-logo">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo-text"><span style="font-weight: 400; color: rgba(255,255,255,0.85);">Smart</span>Hire
                 </div>
             </div>
-        </header>
+            <div class="page-context">User Management</div>
+        </div>
+        <div class="header-right">
+            <span class="welcome-tag">Welcome back, Admin User !</span>
+            <div class="user-profile">
+                <div class="avatar">AD</div>
+            </div>
+        </div>
+    </header>
 
-        <div class="content-scroll">
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <a href="admin_dashboard.html" class="nav-item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+                <a href="admin_resume_analysis.html" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Resume
+                    Analysis</a>
+                <a href="admin_usermanagement.html" class="nav-item active"><i class="fa-solid fa-user-shield"></i> User
+                    Management</a>
+                <a href="#" class="nav-item"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
+                <a href="admin_backup&config.html" class="nav-item"><i class="fa-solid fa-database"></i> Backup
+                    Configuration</a>
+                <a href="admin_audit_logs.html" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
+            </nav>
+        </aside>
+
+        <div class="usermanagement-container">
 
             <!-- ========================================= -->
             <!-- 8.1 USER LIST SCREEN (Default View)       -->
@@ -784,15 +841,16 @@
                     <div class="filters-bar">
                         <div class="search-box">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" class="form-control" placeholder="Search by name or email...">
+                            <input type="text" id="searchInput" class="form-control"
+                                placeholder="Search by name or email...">
                         </div>
-                        <select class="form-control" style="width: auto;">
+                        <select id="roleFilter" class="form-control" style="width: auto;">
                             <option value="">All Roles</option>
                             <option value="admin">Admin</option>
                             <option value="hr">HR Manager</option>
                             <option value="recruiter">Recruiter</option>
                         </select>
-                        <select class="form-control" style="width: auto;">
+                        <select id="statusFilter" class="form-control" style="width: auto;">
                             <option value="">All Status</option>
                             <option value="active">Active</option>
                             <option value="disabled">Disabled</option>
@@ -800,7 +858,12 @@
                         </select>
                         <!-- From Date -->
                         <div style="display:flex; flex-direction:column; justify-content:center;">
-                            <input type="date" class="form-control">
+                            <input type="date" id="dateFilter" class="form-control">
+                        </div>
+
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button class="btn btn-primary" onclick="applyUserFilters()">Apply Filters</button>
+                            <button class="btn btn-secondary" onclick="clearUserFilters()">Clear</button>
                         </div>
 
                         <div style="margin-left: auto; display: flex; gap: 10px;">
@@ -826,104 +889,22 @@
                                     <th style="text-align: right; width: 140px;">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Row 1 -->
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td style="font-family: monospace; color: var(--text-muted);">USR-001</td>
-                                    <td style="font-weight: 500;">Ananya Sharma</td>
-                                    <td>a.sharma@smarthire.in</td>
-                                    <td><span class="badge badge-role">Admin</span></td>
-                                    <td><span class="badge badge-active">Active</span></td>
-                                    <td style="font-size: 13px; color: var(--text-secondary);">Just now</td>
-                                    <td style="font-size: 13px; color: var(--text-secondary);">Jan 12, 2024</td>
-                                    <td class="action-cell">
-                                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                                            <button class="btn btn-secondary btn-sm" onclick="switchView('edit')"
-                                                title="Edit">
-                                                <i class="fa-regular fa-pen-to-square"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-sm" title="Activity"
-                                                onclick="showAuditHistory('Ananya Sharma', false)">
-                                                <i class="fa-solid fa-clock-rotate-left"></i>
-                                            </button>
-                                            <label class="toggle-switch" title="Toggle Status">
-                                                <input type="checkbox" checked
-                                                    onchange="handleToggleChange(this, 'Ananya Sharma', 'USR-001')">
-                                                <span class="slider"></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 2 -->
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td style="font-family: monospace; color: var(--text-muted);">USR-002</td>
-                                    <td style="font-weight: 500;">Rahul Kapoor</td>
-                                    <td>r.kapoor@smarthire.in</td>
-                                    <td><span class="badge badge-role">Recruiter</span></td>
-                                    <td><span class="badge badge-active">Active</span></td>
-                                    <td style="font-size: 13px; color: var(--text-secondary);">2 hours ago</td>
-                                    <td style="font-size: 13px; color: var(--text-secondary);">Feb 04, 2024</td>
-                                    <td class="action-cell">
-                                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                                            <button class="btn btn-secondary btn-sm" onclick="switchView('edit')"
-                                                title="Edit">
-                                                <i class="fa-regular fa-pen-to-square"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-sm" title="Activity"
-                                                onclick="showAuditHistory('Rahul Kapoor', false)">
-                                                <i class="fa-solid fa-clock-rotate-left"></i>
-                                            </button>
-                                            <label class="toggle-switch" title="Toggle Status">
-                                                <input type="checkbox" checked
-                                                    onchange="handleToggleChange(this, 'Rahul Kapoor', 'USR-002')">
-                                                <span class="slider"></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 3 -->
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td style="font-family: monospace; color: var(--text-muted);">USR-003</td>
-                                    <td style="font-weight: 500;">Vikram Malhotra</td>
-                                    <td>v.malhotra@smarthire.in</td>
-                                    <td><span class="badge badge-role">HR Manager</span></td>
-                                    <td><span class="badge badge-disabled">Inactive</span></td>
-                                    <td style="font-size: 13px; color: var(--text-secondary);">14 days ago</td>
-                                    <td style="font-size: 13px; color: var(--text-secondary);">Mar 10, 2024</td>
-                                    <td class="action-cell">
-                                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                                            <button class="btn btn-secondary btn-sm" onclick="switchView('edit')"
-                                                title="Edit">
-                                                <i class="fa-regular fa-pen-to-square"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-sm" title="Activity"
-                                                onclick="showAuditHistory('Vikram Malhotra', false)">
-                                                <i class="fa-solid fa-clock-rotate-left"></i>
-                                            </button>
-                                            <label class="toggle-switch" title="Toggle Status">
-                                                <input type="checkbox"
-                                                    onchange="handleToggleChange(this, 'Vikram Malhotra', 'USR-003')">
-                                                <span class="slider"></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tbody id="user-table-body">
+                                <!-- Populated by JavaScript -->
                             </tbody>
                         </table>
                     </div>
 
                     <!-- Pagination -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">Showing 1-3 of 45 users</span>
+                        <span id="showing-text" style="font-size: 13px; color: var(--text-secondary);">Showing 1-10 of
+                            25 users</span>
                         <div style="display: flex; gap: 5px;">
-                            <button class="btn btn-secondary btn-sm" disabled>Previous</button>
-                            <button class="btn btn-primary btn-sm">1</button>
-                            <button class="btn btn-secondary btn-sm">2</button>
-                            <button class="btn btn-secondary btn-sm">3</button>
-                            <button class="btn btn-secondary btn-sm">Next</button>
+                            <button id="btn-prev" class="btn btn-secondary btn-sm">Previous</button>
+                            <div id="pagination-numbers" style="display: flex; gap: 5px;">
+                                <!-- Page numbers populate by JS -->
+                            </div>
+                            <button id="btn-next" class="btn btn-secondary btn-sm">Next</button>
                         </div>
                     </div>
                 </div>
@@ -964,20 +945,7 @@
 
 
 
-                        <div class="form-group">
-                            <label class="form-label">Temporary Password</label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="text" class="form-control" value="SmartHire2024!" id="tempPass">
-                                <button type="button" class="btn btn-secondary"
-                                    onclick="document.getElementById('tempPass').value = Math.random().toString(36).slice(-8)">Generate</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
-                            <input type="checkbox" id="forceChange" checked>
-                            <label for="forceChange" style="font-size: 14px;">Force password change on first
-                                login</label>
-                        </div>
+                        <!-- Password fields removed as requested -->
 
                         <div
                             style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 12px;">
@@ -1046,7 +1014,7 @@
                                 style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 12px;">
                                 <button type="button" class="btn btn-secondary"
                                     onclick="switchView('list')">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="submit" class="btn btn-primary">Update User</button>
                             </div>
                         </form>
                     </div>
@@ -1087,246 +1055,354 @@
             </div>
 
         </div>
-    </main>
+        </main>
 
-    <!-- ========================================= -->
-    <!-- 8.4 DEACTIVATE / DISABLE CONFIRMATION     -->
-    <!-- ========================================= -->
-    <div id="modal-deactivate" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title" id="modal-title-main">
-                    <i id="modal-inner-icon" class="fa-solid fa-triangle-exclamation"></i> <span
-                        id="modal-inner-title">Disable User Account</span>
-                </div>
-                <div class="modal-controls">
-                    <button class="modal-control-btn" onclick="toggleMinimize(this)" title="Minimize/Restore"><i
-                            class="fa-solid fa-minus"></i></button>
-                    <button class="modal-control-btn close-btn" onclick="closeDeactivateModal()" title="Close"><i
-                            class="fa-solid fa-xmark"></i></button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <p id="modal-description-text"
-                    style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
-                    Are you sure you want to disable <strong id="modal-user-name"
-                        style="color: var(--text-primary);">User</strong>?
-                    This will immediately revoke their system access and terminate active sessions.
-                </p>
-
-                <div class="form-group" id="deactivate-reason-group">
-                    <label class="form-label">Reason for Deactivation <span class="required-star">*</span></label>
-                    <select class="form-control">
-                        <option value="">Select a reason...</option>
-                        <option value="left">Left Organization</option>
-                        <option value="role">Role Change</option>
-                        <option value="security">Security Concern</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-
-                <!-- Recent Account Activity Integration -->
-                <div class="audit-history-section">
-                    <div class="audit-history-title">
-                        <i class="fa-solid fa-clock-rotate-left"></i> Recent Account Activity
+        <!-- ========================================= -->
+        <!-- 8.4 DEACTIVATE / DISABLE CONFIRMATION     -->
+        <!-- ========================================= -->
+        <div id="modal-deactivate" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="modal-title-main">
+                        <i id="modal-inner-icon" class="fa-solid fa-triangle-exclamation"></i> <span
+                            id="modal-inner-title">Disable User Account</span>
                     </div>
-                    <div
-                        style="background: #fdfdfd; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden;">
-                        <table class="audit-history-table">
-                            <thead>
-                                <tr>
-                                    <th>Timestamp</th>
-                                    <th>Action</th>
-                                    <th>Details</th>
-                                </tr>
-                            </thead>
-                            <tbody id="modal-audit-history">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
+                    <div class="modal-controls">
+                        <button class="modal-control-btn" onclick="toggleMinimize(this)" title="Minimize/Restore"><i
+                                class="fa-solid fa-minus"></i></button>
+                        <button class="modal-control-btn close-btn" onclick="closeDeactivateModal()" title="Close"><i
+                                class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
+                <div class="modal-body">
+                    <p id="modal-description-text"
+                        style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
+                        Are you sure you want to disable <strong id="modal-user-name"
+                            style="color: var(--text-primary);">User</strong>?
+                        This will immediately revoke their system access and terminate active sessions.
+                    </p>
 
-                <div class="modal-footer" style="padding-top: 10px;">
-                    <button class="btn btn-secondary"
-                        style="background: transparent; border: 1px solid var(--border-light); color: var(--text-secondary);"
-                        onclick="closeDeactivateModal()">Cancel</button>
-                    <button id="modal-confirm-btn" class="btn btn-warning"
-                        style="background: transparent; border: 1px solid var(--status-warning); color: var(--status-warning);"
-                        onclick="confirmStatusChange()">Mark
-                        Inactive</button>
+                    <div class="form-group" id="deactivate-reason-group">
+                        <label class="form-label">Reason for Deactivation <span class="required-star">*</span></label>
+                        <select class="form-control">
+                            <option value="">Select a reason...</option>
+                            <option value="left">Left Organization</option>
+                            <option value="role">Role Change</option>
+                            <option value="security">Security Concern</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Recent Account Activity Integration -->
+                    <div class="audit-history-section">
+                        <div class="audit-history-title">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Recent Account Activity
+                        </div>
+                        <div
+                            style="background: #fdfdfd; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden;">
+                            <table class="audit-history-table">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Action</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modal-audit-history">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer" style="padding-top: 10px;">
+                        <button class="btn btn-secondary"
+                            style="background: transparent; border: 1px solid var(--border-light); color: var(--text-secondary);"
+                            onclick="closeDeactivateModal()">Cancel</button>
+                        <button id="modal-confirm-btn" class="btn btn-warning"
+                            style="background: transparent; border: 1px solid var(--status-warning); color: var(--status-warning);"
+                            onclick="confirmStatusChange()">Mark
+                            Inactive</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <script>
-            // --- View Switching Logic ---
-            function switchView(viewName) {
-                // Hide all views
-                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-
-                // Show requested view
-                if (viewName === 'list') {
-                    document.getElementById('view-user-list').classList.add('active');
-                } else if (viewName === 'create') {
-                    document.getElementById('view-create-user').classList.add('active');
-                } else if (viewName === 'edit') {
-                    document.getElementById('view-edit-user').classList.add('active');
-                }
-            }
-
-            // --- Action Menu Logic ---
-            function toggleMenu(menuId) {
-                // Close all other menus first
-                document.querySelectorAll('.action-menu').forEach(el => {
-                    if (el.id !== menuId) el.classList.remove('show');
-                });
-
-                const menu = document.getElementById(menuId);
-                menu.classList.toggle('show');
-            }
-
-            // Close menus when clicking outside
-            document.addEventListener('click', function (event) {
-                if (!event.target.closest('.action-cell')) {
-                    document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('show'));
-                }
-            });
-
-            // --- Toggle Switch Logic ---
-            let pendingToggle = null;
-
-            function handleToggleChange(checkbox, userName, userId) {
-                if (!checkbox.checked) {
-                    // Trying to deactivate - REVERT IMMEDIATELY so it stays ON while modal is open
-                    checkbox.checked = true;
-                    pendingToggle = checkbox;
-                    openDeactivateModal(userName);
-                } else {
-                    // Trying to activate
-                    updateUserStatusBadge(userId, 'Active');
-                    alert(`${userName} has been activated successfully.`);
-                }
-            }
-
-            function confirmStatusChange() {
-                if (pendingToggle) {
-                    const row = pendingToggle.closest('tr');
-                    const userId = row.querySelector('td:nth-child(2)').textContent;
-                    // Apply the OFF state now
-                    pendingToggle.checked = false;
-                    updateUserStatusBadge(userId, 'Inactive');
-                }
-                document.getElementById('modal-deactivate').classList.remove('show');
-                alert('Action completed successfully');
-                pendingToggle = null;
-            }
-
-            function updateUserStatusBadge(userId, status) {
-                const rows = document.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const idTd = row.querySelector('td:nth-child(2)');
-                    if (idTd && idTd.textContent === userId) {
-                        const statusTd = row.querySelector('td:nth-child(6)');
-                        if (status === 'Active') {
-                            statusTd.innerHTML = '<span class="badge badge-active">Active</span>';
-                        } else {
-                            statusTd.innerHTML = '<span class="badge badge-disabled">Inactive</span>';
-                        }
-                    }
-                });
-            }
-
-            // --- Modal Logic ---
-            function openDeactivateModal(userName) {
-                showAuditHistory(userName, true);
-            }
-
-            function populateAuditHistory(userName) {
-                const historyBody = document.getElementById('modal-audit-history');
-                const mockHistory = [
-                    { time: '2024-05-18 10:42', action: 'Login', details: 'Successful login from IP 192.168.1.45' },
-                    { time: '2024-05-15 14:20', action: 'Update', details: 'Changed password' },
-                    { time: '2024-05-12 09:15', action: 'Profile', details: 'Updated contact number' }
+            <script>
+                // --- Mock Data ---
+                const baseUsers = [
+                    { id: 'USR-001', name: 'Ananya Sharma', email: 'a.sharma@smarthire.in', role: 'Admin', status: 'Active', lastLogin: 'Just now', createdOn: 'Jan 12, 2024' },
+                    { id: 'USR-002', name: 'Rahul Kapoor', email: 'r.kapoor@smarthire.in', role: 'Recruiter', status: 'Active', lastLogin: '2 hours ago', createdOn: 'Feb 04, 2024' },
+                    { id: 'USR-003', name: 'Vikram Malhotra', email: 'v.malhotra@smarthire.in', role: 'HR Manager', status: 'Inactive', lastLogin: '14 days ago', createdOn: 'Mar 10, 2024' },
+                    { id: 'USR-004', name: 'Priya Patel', email: 'p.patel@smarthire.in', role: 'Recruiter', status: 'Active', lastLogin: '5 hours ago', createdOn: 'Apr 02, 2024' },
+                    { id: 'USR-005', name: 'Arjun Mehta', email: 'a.mehta@smarthire.in', role: 'Admin', status: 'Active', lastLogin: 'Yesterday', createdOn: 'Apr 15, 2024' },
+                    { id: 'USR-006', name: 'Sneha Rao', email: 's.rao@smarthire.in', role: 'HR Manager', status: 'Active', lastLogin: '3 days ago', createdOn: 'May 10, 2024' },
+                    { id: 'USR-007', name: 'Rohan Das', email: 'r.das@smarthire.in', role: 'Recruiter', status: 'Locked', lastLogin: 'Never', createdOn: 'Jun 01, 2024' },
+                    { id: 'USR-008', name: 'Kavita Iyer', email: 'k.iyer@smarthire.in', role: 'Admin', status: 'Active', lastLogin: '1 hour ago', createdOn: 'Jun 15, 2024' },
+                    { id: 'USR-009', name: 'Siddharth Sen', email: 's.sen@smarthire.in', role: 'Recruiter', status: 'Active', lastLogin: '2 days ago', createdOn: 'Jul 10, 2024' },
+                    { id: 'USR-010', name: 'Meera Joshi', email: 'm.joshi@smarthire.in', role: 'HR Manager', status: 'Active', lastLogin: 'Just now', createdOn: 'Aug 05, 2024' },
+                    { id: 'USR-011', name: 'Kabir Singh', email: 'k.singh@smarthire.in', role: 'Recruiter', status: 'Active', lastLogin: '1 day ago', createdOn: 'Sep 12, 2024' },
+                    { id: 'USR-012', name: 'Aditi Verma', email: 'a.verma@smarthire.in', role: 'HR Manager', status: 'Active', lastLogin: '4 hours ago', createdOn: 'Oct 01, 2024' },
                 ];
 
-                historyBody.innerHTML = mockHistory.map(item => `
+                const allUsers = [];
+                for (let i = 0; i < 3; i++) {
+                    baseUsers.forEach(user => {
+                        const newIdNum = parseInt(user.id.split('-')[1]) + (i * 12);
+                        const newIdStr = 'USR-' + String(newIdNum).padStart(3, '0');
+                        allUsers.push({ ...user, id: newIdStr });
+                    });
+                }
+
+                let currentPage = 1;
+                const rowsPerPage = 6;
+                let filteredUsers = [...allUsers];
+
+                // --- View Switching Logic ---
+                function switchView(viewName) {
+                    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                    if (viewName === 'list') {
+                        document.getElementById('view-user-list').classList.add('active');
+                    } else if (viewName === 'create') {
+                        document.getElementById('view-create-user').classList.add('active');
+                    } else if (viewName === 'edit') {
+                        document.getElementById('view-edit-user').classList.add('active');
+                    }
+                }
+
+                // --- Action Menu Logic ---
+                function toggleMenu(menuId) {
+                    document.querySelectorAll('.action-menu').forEach(el => {
+                        if (el.id !== menuId) el.classList.remove('show');
+                    });
+                    const menu = document.getElementById(menuId);
+                    menu.classList.toggle('show');
+                }
+
+                document.addEventListener('click', function (event) {
+                    if (!event.target.closest('.action-cell')) {
+                        document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('show'));
+                    }
+                });
+
+                // --- Toggle Switch Logic ---
+                let pendingToggle = null;
+
+                function handleToggleChange(checkbox, userName, userId) {
+                    if (!checkbox.checked) {
+                        checkbox.checked = true;
+                        pendingToggle = checkbox;
+                        openDeactivateModal(userName);
+                    } else {
+                        updateUserStatusBadge(userId, 'Active');
+                        alert(`${userName} has been activated successfully.`);
+                    }
+                }
+
+                function confirmStatusChange() {
+                    if (pendingToggle) {
+                        const userId = pendingToggle.id.split('-').pop();
+                        pendingToggle.checked = false;
+                        updateUserStatusBadge(userId, 'Inactive');
+                    }
+                    document.getElementById('modal-deactivate').classList.remove('show');
+                    alert('Action completed successfully');
+                    pendingToggle = null;
+                }
+
+                function updateUserStatusBadge(userId, status) {
+                    const user = allUsers.find(u => u.id === userId);
+                    if (user) user.status = status;
+                    renderUserTable(currentPage);
+                }
+
+                // --- Rendering Logic ---
+                function renderUserTable(page) {
+                    currentPage = page;
+                    const tbody = document.getElementById('user-table-body');
+                    tbody.innerHTML = '';
+
+                    const start = (page - 1) * rowsPerPage;
+                    const end = start + rowsPerPage;
+                    const paginatedItems = filteredUsers.slice(start, end);
+
+                    paginatedItems.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                        <td><input type="checkbox"></td>
+                        <td style="font-family: monospace; color: var(--text-muted);">${user.id}</td>
+                        <td style="font-weight: 500;">${user.name}</td>
+                        <td>${user.email}</td>
+                        <td><span class="badge badge-role">${user.role}</span></td>
+                        <td><span class="badge badge-${user.status.toLowerCase()}">${user.status}</span></td>
+                        <td style="font-size: 13px; color: var(--text-secondary);">${user.lastLogin}</td>
+                        <td style="font-size: 13px; color: var(--text-secondary);">${user.createdOn}</td>
+                        <td class="action-cell">
+                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                <button class="btn btn-secondary btn-sm" onclick="switchView('edit')" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button class="btn btn-secondary btn-sm" title="Activity" onclick="showAuditHistory('${user.name}', false)"><i class="fa-solid fa-clock-rotate-left"></i></button>
+                                <label class="toggle-switch" title="Toggle Status">
+                                    <input type="checkbox" id="toggle-${user.id}" ${user.status === 'Active' ? 'checked' : ''} onchange="handleToggleChange(this, '${user.name}', '${user.id}')">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </td>
+                    `;
+                        tbody.appendChild(row);
+                    });
+
+                    document.getElementById('showing-text').textContent = `Showing ${filteredUsers.length > 0 ? start + 1 : 0}-${Math.min(end, filteredUsers.length)} of ${filteredUsers.length} users`;
+                    setupPagination();
+                }
+
+                function setupPagination() {
+                    const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
+                    const paginationContainer = document.getElementById('pagination-numbers');
+                    paginationContainer.innerHTML = '';
+
+                    let pageGroupSize = 2;
+                    let currentGroup = Math.ceil(currentPage / pageGroupSize);
+                    let startPage = (currentGroup - 1) * pageGroupSize + 1;
+                    let endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+                    // Previous Button
+                    const prevBtn = document.getElementById('btn-prev');
+                    prevBtn.disabled = currentPage === 1;
+                    prevBtn.onclick = () => renderUserTable(currentPage - 1);
+
+                    // Next Button
+                    const nextBtn = document.getElementById('btn-next');
+                    nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+                    nextBtn.onclick = () => renderUserTable(currentPage + 1);
+
+                    // Page Numbers
+                    for (let i = startPage; i <= endPage; i++) {
+                        const btn = document.createElement('button');
+                        btn.className = `btn btn-sm ${i === currentPage ? 'btn-primary' : 'btn-secondary'}`;
+                        btn.textContent = i;
+                        btn.onclick = () => renderUserTable(i);
+                        paginationContainer.appendChild(btn);
+                    }
+                }
+
+                // --- Search & Filter Logic ---
+                function applyUserFilters() {
+                    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                    const role = document.getElementById('roleFilter').value.toLowerCase();
+                    const status = document.getElementById('statusFilter').value.toLowerCase();
+                    const date = document.getElementById('dateFilter').value;
+
+                    filteredUsers = allUsers.filter(user => {
+                        const matchesSearch = !searchTerm || user.name.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
+                        const matchesRole = !role || user.role.toLowerCase().includes(role);
+                        const matchesStatus = !status || user.status.toLowerCase().includes(status);
+
+                        let matchesDate = true;
+                        if (date) {
+                            const filterDate = new Date(date);
+                            const rowDate = new Date(user.createdOn);
+                            matchesDate = filterDate.toDateString() === rowDate.toDateString();
+                        }
+
+                        return matchesSearch && matchesRole && matchesStatus && matchesDate;
+                    });
+
+                    renderUserTable(1);
+                }
+
+                function clearUserFilters() {
+                    document.getElementById('searchInput').value = '';
+                    document.getElementById('roleFilter').value = '';
+                    document.getElementById('statusFilter').value = '';
+                    document.getElementById('dateFilter').value = '';
+                    filteredUsers = [...allUsers];
+                    renderUserTable(1);
+                }
+
+                // --- Modal Logic ---
+                function openDeactivateModal(userName) {
+                    showAuditHistory(userName, true);
+                }
+
+                function populateAuditHistory(userName) {
+                    const historyBody = document.getElementById('modal-audit-history');
+                    const mockHistory = [
+                        { time: '2024-05-18 10:42', action: 'Login', details: 'Successful login from IP 192.168.1.45' },
+                        { time: '2024-05-15 14:20', action: 'Update', details: 'Changed password' },
+                        { time: '2024-05-12 09:15', action: 'Profile', details: 'Updated contact number' }
+                    ];
+
+                    historyBody.innerHTML = mockHistory.map(item => `
                     <tr>
                         <td class="mono">${item.time}</td>
                         <td><span class="badge ${item.action === 'Login' ? 'badge-active' : 'badge-role'}" style="min-width: 60px; font-size: 10px;">${item.action}</span></td>
                         <td>${item.details}</td>
                     </tr>
                 `).join('');
-            }
-
-            function showAuditHistory(userName, isDeactivation) {
-                // Update Modal Content
-                const titleText = document.getElementById('modal-inner-title');
-                const titleIcon = document.getElementById('modal-inner-icon');
-                const titleWrapper = document.getElementById('modal-title-main');
-                const descText = document.getElementById('modal-description-text');
-                const reasonGroup = document.getElementById('deactivate-reason-group');
-                const confirmBtn = document.getElementById('modal-confirm-btn');
-                const userNameEl = document.getElementById('modal-user-name');
-
-                userNameEl.textContent = userName;
-                populateAuditHistory(userName);
-
-                if (isDeactivation) {
-                    titleText.textContent = "Disable User Account";
-                    titleIcon.className = "fa-solid fa-triangle-exclamation";
-                    titleWrapper.style.color = "var(--status-error)";
-                    descText.style.display = "block";
-                    reasonGroup.style.display = "block";
-                    confirmBtn.style.display = "block";
-                    confirmBtn.textContent = "Mark Inactive";
-                } else {
-                    titleText.textContent = "Account Activity: " + userName;
-                    titleIcon.className = "fa-solid fa-clock-rotate-left";
-                    titleWrapper.style.color = "var(--primary-blue)";
-                    descText.style.display = "none";
-                    reasonGroup.style.display = "none";
-                    confirmBtn.style.display = "none";
                 }
 
-                document.getElementById('modal-deactivate').classList.add('show');
-                // Close any open menus
-                document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('show'));
-            }
+                function showAuditHistory(userName, isDeactivation) {
+                    const titleText = document.getElementById('modal-inner-title');
+                    const titleIcon = document.getElementById('modal-inner-icon');
+                    const titleWrapper = document.getElementById('modal-title-main');
+                    const descText = document.getElementById('modal-description-text');
+                    const reasonGroup = document.getElementById('deactivate-reason-group');
+                    const confirmBtn = document.getElementById('modal-confirm-btn');
+                    const userNameEl = document.getElementById('modal-user-name');
 
-            function closeDeactivateModal() {
-                const modal = document.getElementById('modal-deactivate');
-                modal.classList.remove('show');
-                modal.classList.remove('minimized');
-                modal.querySelector('.modal-content').classList.remove('minimized');
-                pendingToggle = null;
-            }
+                    userNameEl.textContent = userName;
+                    populateAuditHistory(userName);
 
-            function toggleMinimize(btn) {
-                const modal = btn.closest('.modal-overlay');
-                const content = modal.querySelector('.modal-content');
-                const isMinimized = content.classList.toggle('minimized');
-                modal.classList.toggle('minimized', isMinimized);
+                    if (isDeactivation) {
+                        titleText.textContent = "Disable User Account";
+                        titleIcon.className = "fa-solid fa-triangle-exclamation";
+                        titleWrapper.style.color = "var(--status-error)";
+                        descText.style.display = "block";
+                        reasonGroup.style.display = "block";
+                        confirmBtn.style.display = "block";
+                        confirmBtn.textContent = "Mark Inactive";
+                    } else {
+                        titleText.textContent = "Account Activity: " + userName;
+                        titleIcon.className = "fa-solid fa-clock-rotate-left";
+                        titleWrapper.style.color = "var(--primary-blue)";
+                        descText.style.display = "none";
+                        reasonGroup.style.display = "none";
+                        confirmBtn.style.display = "none";
+                    }
 
-                // Update icon
-                const icon = btn.querySelector('i');
-                if (isMinimized) {
-                    icon.classList.replace('fa-minus', 'fa-up-right-from-square');
-                } else {
-                    icon.classList.replace('fa-up-right-from-square', 'fa-minus');
+                    document.getElementById('modal-deactivate').classList.add('show');
                 }
-            }
 
-            // --- Bulk Actions Logic ---
-            function toggleBulkActions(checkbox) {
-                const bar = document.getElementById('bulkActionBar');
-                if (checkbox.checked) {
-                    bar.classList.add('show');
-                } else {
-                    bar.classList.remove('show');
+                function closeDeactivateModal() {
+                    const modal = document.getElementById('modal-deactivate');
+                    modal.classList.remove('show');
+                    pendingToggle = null;
                 }
-            }
-        </script>
+
+                function toggleMinimize(btn) {
+                    const modal = btn.closest('.modal-overlay');
+                    const content = modal.querySelector('.modal-content');
+                    const isMinimized = content.classList.toggle('minimized');
+                    modal.classList.toggle('minimized', isMinimized);
+                    const icon = btn.querySelector('i');
+                    if (isMinimized) {
+                        icon.classList.replace('fa-minus', 'fa-up-right-from-square');
+                    } else {
+                        icon.classList.replace('fa-up-right-from-square', 'fa-minus');
+                    }
+                }
+
+                function toggleBulkActions(checkbox) {
+                    const bar = document.getElementById('bulkActionBar');
+                    if (checkbox.checked) {
+                        bar.classList.add('show');
+                    } else {
+                        bar.classList.remove('show');
+                    }
+                }
+
+                // Initialize
+                window.onload = () => renderUserTable(1);
+            </script>
 </body>
 
 </html>
