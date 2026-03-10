@@ -856,7 +856,6 @@
                             <option value="disabled">Disabled</option>
                             <option value="locked">Locked</option>
                         </select>
-                        <input type="date" id="dateFilter" class="form-control" style="width: auto;">
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <button class="btn btn-primary" onclick="applyUserFilters()">Apply</button>
                             <button class="btn btn-secondary" onclick="clearUserFilters()">Clear</button>
@@ -1293,22 +1292,13 @@
                     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
                     const role = document.getElementById('roleFilter').value.toLowerCase();
                     const status = document.getElementById('statusFilter').value.toLowerCase();
-                    const dateFilterEl = document.getElementById('dateFilter');
-                    const date = dateFilterEl ? dateFilterEl.value : '';
 
                     filteredUsers = allUsers.filter(user => {
                         const matchesSearch = !searchTerm || user.name.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
                         const matchesRole = !role || user.role.toLowerCase().includes(role);
                         const matchesStatus = !status || user.status.toLowerCase().includes(status);
 
-                        let matchesDate = true;
-                        if (date) {
-                            const filterDate = new Date(date).toDateString();
-                            const rowDate = new Date(user.createdOn).toDateString();
-                            matchesDate = filterDate === rowDate;
-                        }
-
-                        return matchesSearch && matchesRole && matchesStatus && matchesDate;
+                        return matchesSearch && matchesRole && matchesStatus;
                     });
 
                     renderUserTable(1);
@@ -1318,8 +1308,6 @@
                     document.getElementById('searchInput').value = '';
                     document.getElementById('roleFilter').value = '';
                     document.getElementById('statusFilter').value = '';
-                    const dateFilterEl = document.getElementById('dateFilter');
-                    if (dateFilterEl) dateFilterEl.value = '';
                     filteredUsers = [...allUsers];
                     renderUserTable(1);
                 }
