@@ -17,7 +17,7 @@
             --primary: #4A62DD;
             --primary-indigo: #3a4eb5;
             --sidebar-bg: #3a4eb5;
-            --header-bg: #4a62dd;
+            --header-bg: #4A62DD;
             --info: #5FE3FB;
 
             --bg-main: #EEF1FF;
@@ -794,7 +794,7 @@
                 <div class="app-logo">
                     <i class="fas fa-brain"></i>
                 </div>
-                 <div class="logo-text"><span style="font-weight: 700; ">SmartHire
+                <div class="logo-text"><span style="font-weight: 700;">SmartHire
                 </div>
             </div>
             <div class="page-context">User Management</div>
@@ -857,12 +857,10 @@
                             <option value="locked">Locked</option>
                         </select>
                         <!-- From Date -->
-                        <div style="display:flex; flex-direction:column; justify-content:center;">
-                            <input type="date" id="dateFilter" class="form-control">
-                        </div>
+
 
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <button class="btn btn-primary" onclick="applyUserFilters()">Apply Filters</button>
+                            <button class="btn btn-primary" onclick="applyUserFilters()">Apply</button>
                             <button class="btn btn-secondary" onclick="clearUserFilters()">Clear</button>
                         </div>
 
@@ -921,7 +919,8 @@
                 </div>
 
                 <div class="card" style="max-width: 800px;">
-                    <form onsubmit="event.preventDefault(); switchView('list'); alert('User created successfully!');">
+                    <form id="create-user-form"
+                        onsubmit="event.preventDefault(); switchView('list'); alert('User created successfully!');">
                         <div class="form-group">
                             <label class="form-label">Full Name <span class="required-star">*</span></label>
                             <input type="text" class="form-control" placeholder="e.g. Arjun Dev" required>
@@ -949,7 +948,8 @@
 
                         <div
                             style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 12px;">
-                            <button type="button" class="btn btn-secondary" onclick="switchView('list')">Cancel</button>
+                            <button type="button" class="btn btn-secondary"
+                                onclick="clearForm('create-user-form')">Clear Form</button>
                             <button type="submit" class="btn btn-primary">Create User</button>
                         </div>
                     </form>
@@ -978,15 +978,17 @@
                             </div>
                         </div>
 
-                        <form onsubmit="event.preventDefault(); switchView('list'); alert('Changes saved!');">
+                        <form id="edit-user-form"
+                            onsubmit="event.preventDefault(); switchView('list'); alert('Changes saved!');">
                             <div class="form-group">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" value="Sarah Jenkins">
+                                <label class="form-label">Full Name <span class="required-star">*</span></label>
+                                <input type="text" class="form-control" value="Sarah Jenkins" required>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Role Assignment</label>
-                                <select class="form-control">
+                                <label class="form-label">Role Assignment <span class="required-star">*</span></label>
+                                <select class="form-control" required>
+                                    <option value="" disabled>Select a role...</option>
                                     <option value="admin" selected>Admin</option>
                                     <option value="hr">HR Manager</option>
                                     <option value="recruiter">Recruiter</option>
@@ -1013,7 +1015,7 @@
                             <div
                                 style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 12px;">
                                 <button type="button" class="btn btn-secondary"
-                                    onclick="switchView('list')">Cancel</button>
+                                    onclick="clearForm('edit-user-form')">Clear Form</button>
                                 <button type="submit" class="btn btn-primary">Update User</button>
                             </div>
                         </form>
@@ -1084,7 +1086,7 @@
 
                     <div class="form-group" id="deactivate-reason-group">
                         <label class="form-label">Reason for Deactivation <span class="required-star">*</span></label>
-                        <select class="form-control">
+                        <select id="deactivate-reason-select" class="form-control">
                             <option value="">Select a reason...</option>
                             <option value="left">Left Organization</option>
                             <option value="role">Role Change</option>
@@ -1116,9 +1118,6 @@
                     </div>
 
                     <div class="modal-footer" style="padding-top: 10px;">
-                        <button class="btn btn-secondary"
-                            style="background: transparent; border: 1px solid var(--border-light); color: var(--text-secondary);"
-                            onclick="closeDeactivateModal()">Cancel</button>
                         <button id="modal-confirm-btn" class="btn btn-warning"
                             style="background: transparent; border: 1px solid var(--status-warning); color: var(--status-warning);"
                             onclick="confirmStatusChange()">Mark
@@ -1199,6 +1198,12 @@
                 }
 
                 function confirmStatusChange() {
+                    const reasonSelect = document.getElementById('deactivate-reason-select');
+                    if (!reasonSelect.value) {
+                        alert('Please select a reason for deactivation.');
+                        return;
+                    }
+
                     if (pendingToggle) {
                         const userId = pendingToggle.id.split('-').pop();
                         pendingToggle.checked = false;
@@ -1207,6 +1212,7 @@
                     document.getElementById('modal-deactivate').classList.remove('show');
                     alert('Action completed successfully');
                     pendingToggle = null;
+                    reasonSelect.value = ''; // Reset for next time
                 }
 
                 function updateUserStatusBadge(userId, status) {
@@ -1400,10 +1406,21 @@
                     }
                 }
 
+                function clearForm(formId) {
+                    const form = document.getElementById(formId);
+                    if (form) {
+                        // Clear text inputs, email, etc.
+                        form.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(input => input.value = '');
+                        // Reset selects to first option
+                        form.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+                        // Uncheck radios/checkboxes if they were checked (except maybe default ones, but user said "clear all filled details")
+                        form.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => input.checked = false);
+                    }
+                }
+
                 // Initialize
                 window.onload = () => renderUserTable(1);
             </script>
 </body>
 
 </html>
-
