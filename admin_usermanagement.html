@@ -787,7 +787,7 @@
 
 <body>
 
-    <!-- SIDEnjjjjnkjbihpioBAR -->
+    <!-- SIDEBAR -->
     <header class="global-header">
         <div class="header-left">
             <div class="logo-container">
@@ -856,9 +856,7 @@
                             <option value="disabled">Disabled</option>
                             <option value="locked">Locked</option>
                         </select>
-                        <!-- From Date -->
-
-
+                        <input type="date" id="dateFilter" class="form-control" style="width: auto;">
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <button class="btn btn-primary" onclick="applyUserFilters()">Apply</button>
                             <button class="btn btn-secondary" onclick="clearUserFilters()">Clear</button>
@@ -1295,7 +1293,8 @@
                     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
                     const role = document.getElementById('roleFilter').value.toLowerCase();
                     const status = document.getElementById('statusFilter').value.toLowerCase();
-                    const date = document.getElementById('dateFilter').value;
+                    const dateFilterEl = document.getElementById('dateFilter');
+                    const date = dateFilterEl ? dateFilterEl.value : '';
 
                     filteredUsers = allUsers.filter(user => {
                         const matchesSearch = !searchTerm || user.name.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
@@ -1304,9 +1303,9 @@
 
                         let matchesDate = true;
                         if (date) {
-                            const filterDate = new Date(date);
-                            const rowDate = new Date(user.createdOn);
-                            matchesDate = filterDate.toDateString() === rowDate.toDateString();
+                            const filterDate = new Date(date).toDateString();
+                            const rowDate = new Date(user.createdOn).toDateString();
+                            matchesDate = filterDate === rowDate;
                         }
 
                         return matchesSearch && matchesRole && matchesStatus && matchesDate;
@@ -1319,7 +1318,8 @@
                     document.getElementById('searchInput').value = '';
                     document.getElementById('roleFilter').value = '';
                     document.getElementById('statusFilter').value = '';
-                    document.getElementById('dateFilter').value = '';
+                    const dateFilterEl = document.getElementById('dateFilter');
+                    if (dateFilterEl) dateFilterEl.value = '';
                     filteredUsers = [...allUsers];
                     renderUserTable(1);
                 }
