@@ -17,7 +17,7 @@
             --info: #5FE3FB;
 
             --bg-main: #EEF1FF;
-            --bg-card: #FFFFFF;
+            --bg-card: #FFFFFf;
 
             --status-success: #2F9E44;
             --status-bg-success: #EBFBEE;
@@ -808,7 +808,7 @@
                 <div class="app-logo">
                     <i class="fas fa-brain"></i>
                 </div>
-                <div class="logo-text"><span style="font-weight: 700; ">SmartHire
+                <div class="logo-text"><span style="font-weight: 700;">SmartHire</span>
                 </div>
             </div>
             <div class="page-context">Backup Configuration</div>
@@ -930,7 +930,7 @@
                                         <td style="color: var(--text-muted); font-size: 13px;">Oct 22, 2023,
                                             03:00 AM
                                         </td>
-                                        <td>Database + Docs</td>
+                                        <td>Database</td>
                                         <td>System</td>
                                         <td>450 MB</td>
                                         <td><span class="badge badge-success">Success</span></td>
@@ -1006,12 +1006,14 @@
                     <div class="card-header">Run Manual Backup</div>
                     <div class="form-group">
                         <label class="form-label">Select Data to Backup</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" checked id="manual-db"> Database
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="manualBackupType" checked id="manual-db" value="database">
+                                Database
                             </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" checked id="manual-docs"> Documents (JDs, Resumes)
+                            <label class="radio-item">
+                                <input type="radio" name="manualBackupType" id="manual-docs" value="documents">
+                                Documents (JDs, Resumes)
                             </label>
                         </div>
                     </div>
@@ -1091,7 +1093,7 @@
                                         <td style="color: var(--text-muted); font-size: 13px;">Oct 15, 2023,
                                             09:30 AM
                                         </td>
-                                        <td>Database + Docs</td>
+                                        <td>Database</td>
                                         <td>Admin</td>
                                         <td>165 MB</td>
                                         <td><span class="badge badge-warning">Archived</span></td>
@@ -1229,7 +1231,7 @@
             const docsChecked = document.getElementById('manual-docs').checked;
 
             if (!dbChecked && !docsChecked) {
-                alert('Please select at least one data type to backup.');
+                alert('Please select a data type to backup.');
                 return;
             }
 
@@ -1299,9 +1301,7 @@
             const timestamp = now.toISOString().replace(/[-:T]/g, '').slice(0, 8);
             const fileName = (status === 'Failed' ? 'fail_' : 'manual_') + timestamp + '.zip';
 
-            let typeStr = "Database";
-            if (dbChecked && docsChecked) typeStr = "Database + Docs";
-            else if (docsChecked) typeStr = "Documents";
+            let typeStr = dbChecked ? "Database" : "Documents";
 
             let statusBadge = `<span class="badge badge-success">Success</span>`;
             let actionBtn = `
@@ -1431,4 +1431,3 @@
 </body>
 
 </html>
-
